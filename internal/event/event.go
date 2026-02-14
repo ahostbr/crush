@@ -38,16 +38,15 @@ func SetNonInteractive(nonInteractive bool) {
 }
 
 func Init() {
-	// KURORYUU: Charm backend telemetry disabled — replace with own analytics if needed
-	// c, err := posthog.NewWithConfig(key, posthog.Config{
-	// 	Endpoint:        endpoint,
-	// 	Logger:          logger{},
-	// 	ShutdownTimeout: 500 * time.Millisecond,
-	// })
-	// if err != nil {
-	// 	slog.Error("Failed to initialize PostHog client", "error", err)
-	// }
-	// client = c
+	c, err := posthog.NewWithConfig(key, posthog.Config{
+		Endpoint:        endpoint,
+		Logger:          logger{},
+		ShutdownTimeout: 500 * time.Millisecond,
+	})
+	if err != nil {
+		slog.Error("Failed to initialize PostHog client", "error", err)
+	}
+	client = c
 	distinctId = getDistinctId()
 }
 

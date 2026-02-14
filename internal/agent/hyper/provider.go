@@ -14,7 +14,7 @@ import (
 	"log/slog"
 	"maps"
 	"net/http"
-	// "net/url" // KURORYUU: Charm Hyper inference API disabled
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -273,43 +273,40 @@ func (m *languageModel) Stream(ctx context.Context, call fantasy.Call) (fantasy.
 }
 
 func (m *languageModel) doRequest(ctx context.Context, stream bool, call fantasy.Call) (*http.Response, error) {
-	// KURORYUU: Charm Hyper inference API disabled
-	return nil, fmt.Errorf("KURORYUU: Charm Hyper inference API disabled")
+	addr, err := url.Parse(m.opts.baseURL)
+	if err != nil {
+		return nil, err
+	}
+	addr = addr.JoinPath(m.modelID)
+	if stream {
+		addr = addr.JoinPath("stream")
+	} else {
+		addr = addr.JoinPath("generate")
+	}
 
-	// addr, err := url.Parse(m.opts.baseURL)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// addr = addr.JoinPath(m.modelID)
-	// if stream {
-	// 	addr = addr.JoinPath("stream")
-	// } else {
-	// 	addr = addr.JoinPath("generate")
-	// }
-	//
-	// body, err := json.Marshal(call)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	//
-	// req, err := http.NewRequestWithContext(ctx, http.MethodPost, addr.String(), bytes.NewReader(body))
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// req.Header.Set("Content-Type", "application/json")
-	// if stream {
-	// 	req.Header.Set("Accept", "text/event-stream")
-	// } else {
-	// 	req.Header.Set("Accept", "application/json")
-	// }
-	// for k, v := range m.opts.headers {
-	// 	req.Header.Set(k, v)
-	// }
-	//
-	// if m.opts.apiKey != "" {
-	// 	req.Header.Set("Authorization", m.opts.apiKey)
-	// }
-	// return m.opts.client.Do(req)
+	body, err := json.Marshal(call)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, addr.String(), bytes.NewReader(body))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if stream {
+		req.Header.Set("Accept", "text/event-stream")
+	} else {
+		req.Header.Set("Accept", "application/json")
+	}
+	for k, v := range m.opts.headers {
+		req.Header.Set(k, v)
+	}
+
+	if m.opts.apiKey != "" {
+		req.Header.Set("Authorization", m.opts.apiKey)
+	}
+	return m.opts.client.Do(req)
 }
 
 // ioReadAllLimit reads up to n bytes.

@@ -2,19 +2,18 @@
 package hyper
 
 import (
-	// KURORYUU: Charm Hyper auth disabled — unused imports commented out
-	// "bytes"
+	"bytes"
 	"context"
-	// "encoding/json"
+	"encoding/json"
 	"errors"
 	"fmt"
-	// "io"
-	// "net/http"
+	"io"
+	"net/http"
 	"os"
-	// "strings"
+	"strings"
 	"time"
 
-	// "github.com/ahostbr/crush/internal/agent/hyper"
+	"github.com/ahostbr/crush/internal/agent/hyper"
 	"github.com/ahostbr/crush/internal/event"
 	"github.com/ahostbr/crush/internal/oauth"
 )
@@ -39,44 +38,41 @@ type TokenResponse struct {
 
 // InitiateDeviceAuth calls the /device/auth endpoint to start the device flow.
 func InitiateDeviceAuth(ctx context.Context) (*DeviceAuthResponse, error) {
-	// KURORYUU: Charm Hyper auth disabled — will implement own auth
-	return nil, fmt.Errorf("KURORYUU: Charm Hyper auth disabled")
+	url := hyper.BaseURL() + "/device/auth"
 
-	// url := hyper.BaseURL() + "/device/auth"
-	//
-	// req, err := http.NewRequestWithContext(
-	// 	ctx, http.MethodPost, url,
-	// 	strings.NewReader(fmt.Sprintf(`{"device_name":%q}`, deviceName())),
-	// )
-	// if err != nil {
-	// 	return nil, fmt.Errorf("create request: %w", err)
-	// }
-	//
-	// req.Header.Set("Content-Type", "application/json")
-	// req.Header.Set("User-Agent", "kuroryuu")
-	//
-	// client := &http.Client{Timeout: 30 * time.Second}
-	// resp, err := client.Do(req)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("execute request: %w", err)
-	// }
-	// defer resp.Body.Close()
-	//
-	// body, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
-	// if err != nil {
-	// 	return nil, fmt.Errorf("read response: %w", err)
-	// }
-	//
-	// if resp.StatusCode != http.StatusOK {
-	// 	return nil, fmt.Errorf("device auth failed: status %d, body %q", resp.StatusCode, string(body))
-	// }
-	//
-	// var authResp DeviceAuthResponse
-	// if err := json.Unmarshal(body, &authResp); err != nil {
-	// 	return nil, fmt.Errorf("unmarshal response: %w", err)
-	// }
-	//
-	// return &authResp, nil
+	req, err := http.NewRequestWithContext(
+		ctx, http.MethodPost, url,
+		strings.NewReader(fmt.Sprintf(`{"device_name":%q}`, deviceName())),
+	)
+	if err != nil {
+		return nil, fmt.Errorf("create request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("User-Agent", "kuroryuu")
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("execute request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
+	if err != nil {
+		return nil, fmt.Errorf("read response: %w", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("device auth failed: status %d, body %q", resp.StatusCode, string(body))
+	}
+
+	var authResp DeviceAuthResponse
+	if err := json.Unmarshal(body, &authResp); err != nil {
+		return nil, fmt.Errorf("unmarshal response: %w", err)
+	}
+
+	return &authResp, nil
 }
 
 func deviceName() string {
@@ -120,88 +116,83 @@ func PollForToken(ctx context.Context, deviceCode string, expiresIn int) (string
 }
 
 func pollOnce(ctx context.Context, deviceCode string) (TokenResponse, error) {
-	// KURORYUU: Charm Hyper auth disabled — will implement own auth
 	var result TokenResponse
-	return result, fmt.Errorf("KURORYUU: Charm Hyper auth disabled")
 
-	// url := fmt.Sprintf("%s/device/auth/%s", hyper.BaseURL(), deviceCode)
-	// req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
-	// if err != nil {
-	// 	return result, fmt.Errorf("create request: %w", err)
-	// }
-	//
-	// req.Header.Set("Content-Type", "application/json")
-	// req.Header.Set("User-Agent", "kuroryuu")
-	//
-	// client := &http.Client{Timeout: 30 * time.Second}
-	// resp, err := client.Do(req)
-	// if err != nil {
-	// 	return result, fmt.Errorf("execute request: %w", err)
-	// }
-	// defer resp.Body.Close()
-	//
-	// body, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
-	// if err != nil {
-	// 	return result, fmt.Errorf("read response: %w", err)
-	// }
-	//
-	// if err := json.Unmarshal(body, &result); err != nil {
-	// 	return result, fmt.Errorf("unmarshal response: %w: %s", err, string(body))
-	// }
-	//
-	// if resp.StatusCode != http.StatusOK {
-	// 	return result, fmt.Errorf("token request failed: status %d body %q", resp.StatusCode, string(body))
-	// }
-	//
-	// return result, nil
+	url := fmt.Sprintf("%s/device/auth/%s", hyper.BaseURL(), deviceCode)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return result, fmt.Errorf("create request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("User-Agent", "kuroryuu")
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return result, fmt.Errorf("execute request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
+	if err != nil {
+		return result, fmt.Errorf("read response: %w", err)
+	}
+
+	if err := json.Unmarshal(body, &result); err != nil {
+		return result, fmt.Errorf("unmarshal response: %w: %s", err, string(body))
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return result, fmt.Errorf("token request failed: status %d body %q", resp.StatusCode, string(body))
+	}
+
+	return result, nil
 }
 
 // ExchangeToken exchanges a refresh token for an access token.
 func ExchangeToken(ctx context.Context, refreshToken string) (*oauth.Token, error) {
-	// KURORYUU: Charm Hyper auth disabled — will implement own auth
-	return nil, fmt.Errorf("KURORYUU: Charm Hyper auth disabled")
+	reqBody := map[string]string{
+		"refresh_token": refreshToken,
+	}
 
-	// reqBody := map[string]string{
-	// 	"refresh_token": refreshToken,
-	// }
-	//
-	// data, err := json.Marshal(reqBody)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("marshal request: %w", err)
-	// }
-	//
-	// url := hyper.BaseURL() + "/token/exchange"
-	// req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(data))
-	// if err != nil {
-	// 	return nil, fmt.Errorf("create request: %w", err)
-	// }
-	//
-	// req.Header.Set("Content-Type", "application/json")
-	// req.Header.Set("User-Agent", "kuroryuu")
-	//
-	// client := &http.Client{Timeout: 30 * time.Second}
-	// resp, err := client.Do(req)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("execute request: %w", err)
-	// }
-	// defer resp.Body.Close()
-	//
-	// body, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
-	// if err != nil {
-	// 	return nil, fmt.Errorf("read response: %w", err)
-	// }
-	//
-	// if resp.StatusCode != http.StatusOK {
-	// 	return nil, fmt.Errorf("token exchange failed: status %d body %q", resp.StatusCode, string(body))
-	// }
-	//
-	// var token oauth.Token
-	// if err := json.Unmarshal(body, &token); err != nil {
-	// 	return nil, fmt.Errorf("unmarshal response: %w", err)
-	// }
-	//
-	// token.SetExpiresAt()
-	// return &token, nil
+	data, err := json.Marshal(reqBody)
+	if err != nil {
+		return nil, fmt.Errorf("marshal request: %w", err)
+	}
+
+	url := hyper.BaseURL() + "/token/exchange"
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(data))
+	if err != nil {
+		return nil, fmt.Errorf("create request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("User-Agent", "kuroryuu")
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("execute request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
+	if err != nil {
+		return nil, fmt.Errorf("read response: %w", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("token exchange failed: status %d body %q", resp.StatusCode, string(body))
+	}
+
+	var token oauth.Token
+	if err := json.Unmarshal(body, &token); err != nil {
+		return nil, fmt.Errorf("unmarshal response: %w", err)
+	}
+
+	token.SetExpiresAt()
+	return &token, nil
 }
 
 // IntrospectTokenResponse contains the response from the token introspection endpoint.
@@ -218,47 +209,44 @@ type IntrospectTokenResponse struct {
 // IntrospectToken validates an access token using the introspection endpoint.
 // Implements OAuth2 Token Introspection (RFC 7662).
 func IntrospectToken(ctx context.Context, accessToken string) (*IntrospectTokenResponse, error) {
-	// KURORYUU: Charm Hyper auth disabled — will implement own auth
-	return nil, fmt.Errorf("KURORYUU: Charm Hyper auth disabled")
+	reqBody := map[string]string{
+		"token": accessToken,
+	}
 
-	// reqBody := map[string]string{
-	// 	"token": accessToken,
-	// }
-	//
-	// data, err := json.Marshal(reqBody)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("marshal request: %w", err)
-	// }
-	//
-	// url := hyper.BaseURL() + "/token/introspect"
-	// req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(data))
-	// if err != nil {
-	// 	return nil, fmt.Errorf("create request: %w", err)
-	// }
-	//
-	// req.Header.Set("Content-Type", "application/json")
-	// req.Header.Set("User-Agent", "kuroryuu")
-	//
-	// client := &http.Client{Timeout: 30 * time.Second}
-	// resp, err := client.Do(req)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("execute request: %w", err)
-	// }
-	// defer resp.Body.Close()
-	//
-	// body, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
-	// if err != nil {
-	// 	return nil, fmt.Errorf("read response: %w", err)
-	// }
-	//
-	// if resp.StatusCode != http.StatusOK {
-	// 	return nil, fmt.Errorf("token introspection failed: status %d body %q", resp.StatusCode, string(body))
-	// }
-	//
-	// var result IntrospectTokenResponse
-	// if err := json.Unmarshal(body, &result); err != nil {
-	// 	return nil, fmt.Errorf("unmarshal response: %w", err)
-	// }
-	//
-	// return &result, nil
+	data, err := json.Marshal(reqBody)
+	if err != nil {
+		return nil, fmt.Errorf("marshal request: %w", err)
+	}
+
+	url := hyper.BaseURL() + "/token/introspect"
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(data))
+	if err != nil {
+		return nil, fmt.Errorf("create request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("User-Agent", "kuroryuu")
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("execute request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
+	if err != nil {
+		return nil, fmt.Errorf("read response: %w", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("token introspection failed: status %d body %q", resp.StatusCode, string(body))
+	}
+
+	var result IntrospectTokenResponse
+	if err := json.Unmarshal(body, &result); err != nil {
+		return nil, fmt.Errorf("unmarshal response: %w", err)
+	}
+
+	return &result, nil
 }

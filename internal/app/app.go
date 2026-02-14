@@ -103,9 +103,8 @@ func New(ctx context.Context, conn *sql.DB, cfg *config.Config) (*App, error) {
 
 	app.setupEvents()
 
-	// KURORYUU: Update checker disabled — will implement own update mechanism
 	// Check for updates in the background.
-	// go app.checkForUpdates(ctx)
+	go app.checkForUpdates(ctx)
 
 	go mcp.Initialize(ctx, app.Permissions, cfg)
 
