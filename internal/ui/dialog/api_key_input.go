@@ -10,13 +10,13 @@ import (
 	"charm.land/bubbles/v2/spinner"
 	"charm.land/bubbles/v2/textinput"
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"charm.land/catwalk/pkg/catwalk"
 	"github.com/ahostbr/crush/internal/config"
 	"github.com/ahostbr/crush/internal/ui/common"
 	"github.com/ahostbr/crush/internal/ui/styles"
 	"github.com/ahostbr/crush/internal/ui/util"
 	uv "github.com/charmbracelet/ultraviolet"
-	"github.com/charmbracelet/x/exp/charmtone"
 )
 
 type APIKeyInputState int
@@ -254,7 +254,7 @@ func (m *APIKeyInput) inputView() string {
 		m.input.Blur()
 	case APIKeyInputStateError:
 		ts := t.TextInput
-		ts.Focused.Prompt = ts.Focused.Prompt.Foreground(charmtone.Cherry)
+		ts.Focused.Prompt = ts.Focused.Prompt.Foreground(lipgloss.Color("#CC3333"))
 
 		m.input.Prompt = styles.LSPErrorIcon + " "
 		m.input.SetStyles(ts)

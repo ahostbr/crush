@@ -26,7 +26,6 @@ import (
 	"github.com/charmbracelet/fang"
 	uv "github.com/charmbracelet/ultraviolet"
 	"github.com/charmbracelet/x/ansi"
-	"github.com/charmbracelet/x/exp/charmtone"
 	"github.com/charmbracelet/x/term"
 	"github.com/spf13/cobra"
 )
@@ -108,7 +107,7 @@ crush -y
 	},
 }
 
-var heartbit = lipgloss.NewStyle().Foreground(charmtone.Dolly).SetString(`
+var heartbit = lipgloss.NewStyle().Foreground(lipgloss.Color("#CC3333")).SetString(`
     ▄▄▄▄▄▄▄▄    ▄▄▄▄▄▄▄▄
   ███████████  ███████████
 ████████████████████████████

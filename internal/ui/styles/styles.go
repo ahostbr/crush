@@ -13,7 +13,6 @@ import (
 	"charm.land/lipgloss/v2"
 	"github.com/alecthomas/chroma/v2"
 	"github.com/ahostbr/crush/internal/ui/diffview"
-	"github.com/charmbracelet/x/exp/charmtone"
 )
 
 const (
@@ -489,53 +488,47 @@ func (s *Styles) DialogHelpStyles() help.Styles {
 // DefaultStyles returns the default styles for the UI.
 func DefaultStyles() Styles {
 	var (
-		primary   = charmtone.Charple
-		secondary = charmtone.Dolly
-		tertiary  = charmtone.Bok
-		// accent    = charmtone.Zest
+		// Kuroryuu Dark Theme — crimson dragon palette
+		primary   = lipgloss.Color("#8B0000") // dark crimson
+		secondary = lipgloss.Color("#CC3333") // bright red
+		tertiary  = lipgloss.Color("#6699CC") // steel blue
 
 		// Backgrounds
-		bgBase        = charmtone.Pepper
-		bgBaseLighter = charmtone.BBQ
-		bgSubtle      = charmtone.Charcoal
-		bgOverlay     = charmtone.Iron
+		bgBase        = lipgloss.Color("#0D0D0D")
+		bgBaseLighter = lipgloss.Color("#1A1A1A")
+		bgSubtle      = lipgloss.Color("#141414")
+		bgOverlay     = lipgloss.Color("#222222")
 
 		// Foregrounds
-		fgBase      = charmtone.Ash
-		fgMuted     = charmtone.Squid
-		fgHalfMuted = charmtone.Smoke
-		fgSubtle    = charmtone.Oyster
-		// fgSelected  = charmtone.Salt
+		fgBase      = lipgloss.Color("#C8C8C8")
+		fgMuted     = lipgloss.Color("#808080")
+		fgHalfMuted = lipgloss.Color("#999999")
+		fgSubtle    = lipgloss.Color("#555555")
 
 		// Borders
-		border      = charmtone.Charcoal
-		borderFocus = charmtone.Charple
+		border      = lipgloss.Color("#333333")
+		borderFocus = lipgloss.Color("#8B0000")
 
 		// Status
-		error   = charmtone.Sriracha
-		warning = charmtone.Zest
-		info    = charmtone.Malibu
+		error   = lipgloss.Color("#CC3333")
+		warning = lipgloss.Color("#CC9933")
+		info    = lipgloss.Color("#6699CC")
 
 		// Colors
-		white = charmtone.Butter
+		white = lipgloss.Color("#E0E0E0")
 
-		blueLight = charmtone.Sardine
-		blue      = charmtone.Malibu
-		blueDark  = charmtone.Damson
+		blueLight = lipgloss.Color("#88AACC")
+		blue      = lipgloss.Color("#6699CC")
+		blueDark  = lipgloss.Color("#445577")
 
-		// yellow = charmtone.Mustard
-		yellow = charmtone.Mustard
-		// citron = charmtone.Citron
+		yellow = lipgloss.Color("#CC9933")
 
-		greenLight = charmtone.Bok
-		green      = charmtone.Julep
-		greenDark  = charmtone.Guac
-		// greenLight = charmtone.Bok
+		greenLight = lipgloss.Color("#6AAA6A")
+		green      = lipgloss.Color("#4A8C4A")
+		greenDark  = lipgloss.Color("#2D5A2D")
 
-		red     = charmtone.Coral
-		redDark = charmtone.Sriracha
-		// redLight = charmtone.Salmon
-		// cherry   = charmtone.Cherry
+		red     = lipgloss.Color("#CC3333")
+		redDark = lipgloss.Color("#8B0000")
 	)
 
 	normalBorder := lipgloss.NormalBorder()
@@ -623,11 +616,8 @@ func DefaultStyles() Styles {
 	s.Markdown = ansi.StyleConfig{
 		Document: ansi.StyleBlock{
 			StylePrimitive: ansi.StylePrimitive{
-				// BlockPrefix: "\n",
-				// BlockSuffix: "\n",
-				Color: stringPtr(charmtone.Smoke.Hex()),
+				Color: stringPtr("#C8C8C8"),
 			},
-			// Margin: uintPtr(defaultMargin),
 		},
 		BlockQuote: ansi.StyleBlock{
 			StylePrimitive: ansi.StylePrimitive{},
@@ -640,7 +630,7 @@ func DefaultStyles() Styles {
 		Heading: ansi.StyleBlock{
 			StylePrimitive: ansi.StylePrimitive{
 				BlockSuffix: "\n",
-				Color:       stringPtr(charmtone.Malibu.Hex()),
+				Color:       stringPtr("#CC3333"),
 				Bold:        boolPtr(true),
 			},
 		},
@@ -648,8 +638,8 @@ func DefaultStyles() Styles {
 			StylePrimitive: ansi.StylePrimitive{
 				Prefix:          " ",
 				Suffix:          " ",
-				Color:           stringPtr(charmtone.Zest.Hex()),
-				BackgroundColor: stringPtr(charmtone.Charple.Hex()),
+				Color:           stringPtr("#CC9933"),
+				BackgroundColor: stringPtr("#5A1A1A"),
 				Bold:            boolPtr(true),
 			},
 		},
@@ -676,7 +666,7 @@ func DefaultStyles() Styles {
 		H6: ansi.StyleBlock{
 			StylePrimitive: ansi.StylePrimitive{
 				Prefix: "###### ",
-				Color:  stringPtr(charmtone.Guac.Hex()),
+				Color:  stringPtr("#666666"),
 				Bold:   boolPtr(false),
 			},
 		},
@@ -690,7 +680,7 @@ func DefaultStyles() Styles {
 			Bold: boolPtr(true),
 		},
 		HorizontalRule: ansi.StylePrimitive{
-			Color:  stringPtr(charmtone.Charcoal.Hex()),
+			Color:  stringPtr("#333333"),
 			Format: "\n--------\n",
 		},
 		Item: ansi.StylePrimitive{
@@ -705,117 +695,117 @@ func DefaultStyles() Styles {
 			Unticked:       "[ ] ",
 		},
 		Link: ansi.StylePrimitive{
-			Color:     stringPtr(charmtone.Zinc.Hex()),
+			Color:     stringPtr("#6699CC"),
 			Underline: boolPtr(true),
 		},
 		LinkText: ansi.StylePrimitive{
-			Color: stringPtr(charmtone.Guac.Hex()),
+			Color: stringPtr("#88AACC"),
 			Bold:  boolPtr(true),
 		},
 		Image: ansi.StylePrimitive{
-			Color:     stringPtr(charmtone.Cheeky.Hex()),
+			Color:     stringPtr("#CC9933"),
 			Underline: boolPtr(true),
 		},
 		ImageText: ansi.StylePrimitive{
-			Color:  stringPtr(charmtone.Squid.Hex()),
+			Color:  stringPtr("#999999"),
 			Format: "Image: {{.text}} →",
 		},
 		Code: ansi.StyleBlock{
 			StylePrimitive: ansi.StylePrimitive{
 				Prefix:          " ",
 				Suffix:          " ",
-				Color:           stringPtr(charmtone.Coral.Hex()),
-				BackgroundColor: stringPtr(charmtone.Charcoal.Hex()),
+				Color:           stringPtr("#CC3333"),
+				BackgroundColor: stringPtr("#222222"),
 			},
 		},
 		CodeBlock: ansi.StyleCodeBlock{
 			StyleBlock: ansi.StyleBlock{
 				StylePrimitive: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Charcoal.Hex()),
+					Color: stringPtr("#1A1A1A"),
 				},
 				Margin: uintPtr(defaultMargin),
 			},
 			Chroma: &ansi.Chroma{
 				Text: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Smoke.Hex()),
+					Color: stringPtr("#C8C8C8"),
 				},
 				Error: ansi.StylePrimitive{
-					Color:           stringPtr(charmtone.Butter.Hex()),
-					BackgroundColor: stringPtr(charmtone.Sriracha.Hex()),
+					Color:           stringPtr("#E0E0E0"),
+					BackgroundColor: stringPtr("#8B0000"),
 				},
 				Comment: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Oyster.Hex()),
+					Color: stringPtr("#666666"),
 				},
 				CommentPreproc: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Bengal.Hex()),
+					Color: stringPtr("#CC9933"),
 				},
 				Keyword: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Malibu.Hex()),
+					Color: stringPtr("#CC3333"),
 				},
 				KeywordReserved: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Pony.Hex()),
+					Color: stringPtr("#CC3333"),
 				},
 				KeywordNamespace: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Pony.Hex()),
+					Color: stringPtr("#88AACC"),
 				},
 				KeywordType: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Guppy.Hex()),
+					Color: stringPtr("#6699CC"),
 				},
 				Operator: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Salmon.Hex()),
+					Color: stringPtr("#C8C8C8"),
 				},
 				Punctuation: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Zest.Hex()),
+					Color: stringPtr("#999999"),
 				},
 				Name: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Smoke.Hex()),
+					Color: stringPtr("#C8C8C8"),
 				},
 				NameBuiltin: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Cheeky.Hex()),
+					Color: stringPtr("#CC9933"),
 				},
 				NameTag: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Mauve.Hex()),
+					Color: stringPtr("#CC3333"),
 				},
 				NameAttribute: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Hazy.Hex()),
+					Color: stringPtr("#6699CC"),
 				},
 				NameClass: ansi.StylePrimitive{
-					Color:     stringPtr(charmtone.Salt.Hex()),
+					Color:     stringPtr("#E0E0E0"),
 					Underline: boolPtr(true),
 					Bold:      boolPtr(true),
 				},
 				NameDecorator: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Citron.Hex()),
+					Color: stringPtr("#CC9933"),
 				},
 				NameFunction: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Guac.Hex()),
+					Color: stringPtr("#6AAA6A"),
 				},
 				LiteralNumber: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Julep.Hex()),
+					Color: stringPtr("#88AACC"),
 				},
 				LiteralString: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Cumin.Hex()),
+					Color: stringPtr("#4A8C4A"),
 				},
 				LiteralStringEscape: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Bok.Hex()),
+					Color: stringPtr("#6AAA6A"),
 				},
 				GenericDeleted: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Coral.Hex()),
+					Color: stringPtr("#CC3333"),
 				},
 				GenericEmph: ansi.StylePrimitive{
 					Italic: boolPtr(true),
 				},
 				GenericInserted: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Guac.Hex()),
+					Color: stringPtr("#4A8C4A"),
 				},
 				GenericStrong: ansi.StylePrimitive{
 					Bold: boolPtr(true),
 				},
 				GenericSubheading: ansi.StylePrimitive{
-					Color: stringPtr(charmtone.Squid.Hex()),
+					Color: stringPtr("#999999"),
 				},
 				Background: ansi.StylePrimitive{
-					BackgroundColor: stringPtr(charmtone.Charcoal.Hex()),
+					BackgroundColor: stringPtr("#1A1A1A"),
 				},
 			},
 		},
@@ -830,8 +820,8 @@ func DefaultStyles() Styles {
 	}
 
 	// PlainMarkdown style - muted colors on subtle background for thinking content.
-	plainBg := stringPtr(bgBaseLighter.Hex())
-	plainFg := stringPtr(fgMuted.Hex())
+	plainBg := stringPtr("#1A1A1A")
+	plainFg := stringPtr("#808080")
 	s.PlainMarkdown = ansi.StyleConfig{
 		Document: ansi.StyleBlock{
 			StylePrimitive: ansi.StylePrimitive{
@@ -1178,24 +1168,24 @@ func DefaultStyles() Styles {
 	// Editor
 	s.EditorPromptNormalFocused = lipgloss.NewStyle().Foreground(greenDark).SetString("::: ")
 	s.EditorPromptNormalBlurred = s.EditorPromptNormalFocused.Foreground(fgMuted)
-	s.EditorPromptYoloIconFocused = lipgloss.NewStyle().MarginRight(1).Foreground(charmtone.Oyster).Background(charmtone.Citron).Bold(true).SetString(" ! ")
-	s.EditorPromptYoloIconBlurred = s.EditorPromptYoloIconFocused.Foreground(charmtone.Pepper).Background(charmtone.Squid)
-	s.EditorPromptYoloDotsFocused = lipgloss.NewStyle().MarginRight(1).Foreground(charmtone.Zest).SetString(":::")
-	s.EditorPromptYoloDotsBlurred = s.EditorPromptYoloDotsFocused.Foreground(charmtone.Squid)
+	s.EditorPromptYoloIconFocused = lipgloss.NewStyle().MarginRight(1).Foreground(lipgloss.Color("#999999")).Background(lipgloss.Color("#CC9933")).Bold(true).SetString(" ! ")
+	s.EditorPromptYoloIconBlurred = s.EditorPromptYoloIconFocused.Foreground(lipgloss.Color("#1A1A1A")).Background(lipgloss.Color("#555555"))
+	s.EditorPromptYoloDotsFocused = lipgloss.NewStyle().MarginRight(1).Foreground(lipgloss.Color("#CC9933")).SetString(":::")
+	s.EditorPromptYoloDotsBlurred = s.EditorPromptYoloDotsFocused.Foreground(lipgloss.Color("#555555"))
 
 	s.RadioOn = s.HalfMuted.SetString(RadioOn)
 	s.RadioOff = s.HalfMuted.SetString(RadioOff)
 
 	// Logo colors
-	s.LogoFieldColor = primary
-	s.LogoTitleColorA = secondary
-	s.LogoTitleColorB = primary
+	s.LogoFieldColor = border
+	s.LogoTitleColorA = primary
+	s.LogoTitleColorB = secondary
 	s.LogoBrandColor = secondary
-	s.LogoVersionColor = primary
+	s.LogoVersionColor = fgMuted
 
 	// Section
 	s.Section.Title = s.Subtle
-	s.Section.Line = s.Base.Foreground(charmtone.Charcoal)
+	s.Section.Line = s.Base.Foreground(border)
 
 	// Initialize
 	s.Initialize.Header = s.Base
@@ -1203,14 +1193,14 @@ func DefaultStyles() Styles {
 	s.Initialize.Accent = s.Base.Foreground(greenDark)
 
 	// LSP and MCP status.
-	s.ResourceGroupTitle = lipgloss.NewStyle().Foreground(charmtone.Oyster)
-	s.ResourceOfflineIcon = lipgloss.NewStyle().Foreground(charmtone.Iron).SetString("●")
-	s.ResourceBusyIcon = s.ResourceOfflineIcon.Foreground(charmtone.Citron)
-	s.ResourceErrorIcon = s.ResourceOfflineIcon.Foreground(charmtone.Coral)
-	s.ResourceOnlineIcon = s.ResourceOfflineIcon.Foreground(charmtone.Guac)
-	s.ResourceName = lipgloss.NewStyle().Foreground(charmtone.Squid)
-	s.ResourceStatus = lipgloss.NewStyle().Foreground(charmtone.Oyster)
-	s.ResourceAdditionalText = lipgloss.NewStyle().Foreground(charmtone.Oyster)
+	s.ResourceGroupTitle = lipgloss.NewStyle().Foreground(fgHalfMuted)
+	s.ResourceOfflineIcon = lipgloss.NewStyle().Foreground(fgSubtle).SetString("●")
+	s.ResourceBusyIcon = s.ResourceOfflineIcon.Foreground(warning)
+	s.ResourceErrorIcon = s.ResourceOfflineIcon.Foreground(red)
+	s.ResourceOnlineIcon = s.ResourceOfflineIcon.Foreground(green)
+	s.ResourceName = lipgloss.NewStyle().Foreground(fgSubtle)
+	s.ResourceStatus = lipgloss.NewStyle().Foreground(fgHalfMuted)
+	s.ResourceAdditionalText = lipgloss.NewStyle().Foreground(fgHalfMuted)
 
 	// LSP
 	s.LSP.ErrorDiagnostic = s.Base.Foreground(redDark)
@@ -1263,7 +1253,7 @@ func DefaultStyles() Styles {
 	s.Chat.Message.ThinkingFooterDuration = s.Subtle
 
 	// Text selection.
-	s.TextSelection = lipgloss.NewStyle().Foreground(charmtone.Salt).Background(charmtone.Charple)
+	s.TextSelection = lipgloss.NewStyle().Foreground(white).Background(lipgloss.Color("#5A1A1A"))
 
 	// Dialog styles
 	s.Dialog.Title = base.Padding(0, 1).Foreground(primary)
@@ -1306,16 +1296,16 @@ func DefaultStyles() Styles {
 	s.Dialog.Sessions.DeletingTitleGradientFromColor = red
 	s.Dialog.Sessions.DeletingTitleGradientToColor = s.Primary
 	s.Dialog.Sessions.DeletingItemBlurred = s.Dialog.NormalItem.Foreground(fgSubtle)
-	s.Dialog.Sessions.DeletingItemFocused = s.Dialog.SelectedItem.Background(red).Foreground(charmtone.Butter)
+	s.Dialog.Sessions.DeletingItemFocused = s.Dialog.SelectedItem.Background(red).Foreground(white)
 
-	s.Dialog.Sessions.RenamingingTitle = s.Dialog.Title.Foreground(charmtone.Zest)
-	s.Dialog.Sessions.RenamingView = s.Dialog.View.BorderForeground(charmtone.Zest)
+	s.Dialog.Sessions.RenamingingTitle = s.Dialog.Title.Foreground(warning)
+	s.Dialog.Sessions.RenamingView = s.Dialog.View.BorderForeground(warning)
 	s.Dialog.Sessions.RenamingingMessage = s.Base.Padding(1)
-	s.Dialog.Sessions.RenamingTitleGradientFromColor = charmtone.Zest
-	s.Dialog.Sessions.RenamingTitleGradientToColor = charmtone.Bok
+	s.Dialog.Sessions.RenamingTitleGradientFromColor = warning
+	s.Dialog.Sessions.RenamingTitleGradientToColor = green
 	s.Dialog.Sessions.RenamingItemBlurred = s.Dialog.NormalItem.Foreground(fgSubtle)
 	s.Dialog.Sessions.RenamingingItemFocused = s.Dialog.SelectedItem.UnsetBackground().UnsetForeground()
-	s.Dialog.Sessions.RenamingPlaceholder = base.Foreground(charmtone.Squid)
+	s.Dialog.Sessions.RenamingPlaceholder = base.Foreground(fgSubtle)
 
 	s.Status.Help = lipgloss.NewStyle().Padding(0, 1)
 	s.Status.SuccessIndicator = base.Foreground(bgSubtle).Background(green).Padding(0, 1).Bold(true).SetString("OKAY!")

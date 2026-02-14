@@ -1,4 +1,4 @@
-// Package logo renders a Kuroryuu wordmark in a stylized way.
+// Package logo renders the Kuroryuu brand art and wordmark.
 package logo
 
 import (
@@ -7,15 +7,9 @@ import (
 	"strings"
 
 	"charm.land/lipgloss/v2"
-	"github.com/MakeNowJust/heredoc"
 	"github.com/ahostbr/crush/internal/ui/styles"
 	"github.com/charmbracelet/x/ansi"
-	"github.com/charmbracelet/x/exp/slice"
 )
-
-// letterform represents a letterform. It can be stretched horizontally by
-// a given amount via the boolean argument.
-type letterform func(bool) string
 
 const diag = `╱`
 
@@ -29,83 +23,118 @@ type Opts struct {
 	Width        int         // width of the rendered logo, used for truncation
 }
 
-// Render renders the Kuroryuu logo. Set the argument to true to render the narrow
-// version, intended for use in a sidebar.
-//
-// The compact argument determines whether it renders compact for the sidebar
-// or wider for the main pane.
+// dragonArt is the Kuroryuu dragon ASCII art.
+const dragonArt = `                                            -=++++++++=+=
+                                    ====    -==+++++++======--==
+                                #+=+                     ====+++++++
+                             ### %%                           ++******#%%
+                          ++*     %%        **                   ****#%%%%%
+                        ++        %%%        ##                     #%%%%%%%%%
+                     +             #%%%%     %%##                  *** %%%%%%%%%
+                                     %%%      %%%                  +  #  #%##%%%%%
+                                     %%%%      %%%                ++  #    %##%%%%%%
+                                      %%%%     %%%                  =##     #***##*#%
+                                *#      %%%% %% %%%  %             **         *++++*%%  * **
+                                  %%%%  #%%%%%%% %%%%%%           #            ++*##%***     ++
+                                   ##%%####*%%%%%% %%%%%         #              *########* **    *
+                      ++=++     ##%  ##%%##%%%%%%%%%%%%%% #      %              **####**#+=+#*+
+                      ++=         ##%%%%%%##%%%%%###%%%%%%###   *%             =+**####*****##=+
+                        =       %%%%%%%%%%###%%%%%%%%%%#######   #               +**########+==+
+                       ***##***####%%%%%%%%%###%%%%%%%##******#* **             ++**###%####*++#
+                     ****%%%%*+*#%%%%%%%%%%#####%%%%%###******#   ##             **+**#%%%%%##*#
+                     **###%%%%%##%%#%%%%%%%#%##%%%%%%%###***##%%%%%##          ++**--*##%%###***
+                       *#%%%%%%%#%%%%%%%%%%%%%%%%%%###%#****##%%%%%%%#         ++++--+*#%%%%%#**
+               **++   +**#*#%%%%%%%%%%%%%##########%#####+*    #%%%%#*       == +*+==*###%%%%%****#
+                +++**++***+*%%%%%%%#%%%#####*#   %%%  *#%%**     ###*       === +*****###%%%%%**#**
+                  ###***   =*#%%%%%########             %%%#%##*           === +***#########%%#####
+               ######*+=     +#%%%%%##***+ %        ***# #%%#%%%*           ++++***##%%%###*#%%#*##
+               #**%%%*++   --=+#%%%%%###*#               %%%%%%%      +     +++**#####%%%%##%%%####
+               ## #** **+  ===+*######*==           %##%%#%%%%%   *   **  ++*#####%%##%%###%%%%###
+                  %%% +**   ==+*####*=======       #             **+*+= ****##**#%%#######%#%%%###
+      +             #**++   =+++****+#+===+****                 =+****#*****#########%%%%%%%%%%##
+                     ==     =++==+*++==**####++                 ==++**#####%##%#*#########%%%%#*
+       +               ++    =+*++++==*#%%%%###%              ===+++++**%%#%%%%%%%###%###%#%##*
+                             +*##*+*######%##                  %%#*=+#%%%##%%%%%#####%####%%#***
+                              ###**#####%%%%%##+      #%*  %%%%%%%%#%%%%%%%%%%%%%%##+*#%%%%%#*
+         ##                   ###%%%%%%%%%%%%%%*+=%%%%%%%#%%%%##%%%%%%%%%%%%%%%%%%%%%***##%##*
+   *  #                         #%#%%%%%%%%%%%%%##%%%#%%%%####**%%%%%%%%%%%%%%%%%%%%%%####%%#
+ *++ ++  #      +                ###*##%%%%%%%%##***#%%%%#*+*###%%%%%#%%%%%%%%%%%%%%%%%%%#%%*=
+   *++  #   #    +             =+++****##%%%%%##**++*#%%%#*++%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#*===
+     ==   * ==#%% #            -=   *##%%%%%####***++++*+=*###%%%%%%####%%%%%%%%%%%%%%%%%%#*
+      ==+****+ %%###%%            **++*%%%%%##*####*++++*#####%#%%%%%%%%%%%%%%%%%%%%%%%%%##*
+       **** ++  %%%%%%%              *+  %#%%######**+++*####%%%%%%%%%#*#%%%%%%%%%%####%###
+             **%%%%%%%%%%#*                  **#****+++*##*##%%%%%%%%#++**#%%%%%%%%##*++
+                #%%%%%%%%%%  =                    ==   #   %%%%% #%###===*#%%%%%%%%#*+=
+                +%%%%%%%%%%#                        %%%%%%%%%%%  %%  *=-*#%%%%%%%%%*+=
+                  %%%%%%%%#                            %%%%%%%%        *#%%%%%%%%%*#*=
+                   %%%%%%%%#                          %%%%%% %%       #%%%%%%%%%#*++
+                      ##%%#*              *           %%  %%  %#    %%%%%%%%%%#**==
+                          ##**##                           %#     ##%%%##%%%%##*=
+                            ####### *                         ###%%%%%%%%%%++*+*
+                              ######%#*%%         #   ***==*%%%*+*#*##%%%%
+                                 ####%%%%%%##%#%%%%%%%%###*#%%%*     +#
+                                   +**#%%%%%%%%%%%%%%%%%#%%%%%%#==
+                                           %%%%%%%%%%%%%%%%#%`
+
+// DragonArt returns the dragon ASCII art for display on landing pages.
+func DragonArt() string {
+	return dragonArt
+}
+
+// Render renders the Kuroryuu header logo.
 func Render(s *styles.Styles, version string, compact bool, o Opts) string {
-	const charm = " Kuroryuu"
-
-	fg := func(c color.Color, s string) string {
-		return lipgloss.NewStyle().Foreground(c).Render(s)
+	fg := func(c color.Color, str string) string {
+		return lipgloss.NewStyle().Foreground(c).Render(str)
 	}
 
-	// Title.
-	const spacing = 1
-	letterforms := []letterform{
-		letterC,
-		letterR,
-		letterU,
-		letterSStylized,
-		letterH,
-	}
-	stretchIndex := -1 // -1 means no stretching.
-	if !compact {
-		stretchIndex = cachedRandN(len(letterforms))
-	}
+	title := "黒竜 KURORYUU"
+	titleWidth := lipgloss.Width(title)
 
-	crush := renderWord(spacing, stretchIndex, letterforms...)
-	crushWidth := lipgloss.Width(crush)
-	b := new(strings.Builder)
-	for r := range strings.SplitSeq(crush, "\n") {
-		fmt.Fprintln(b, styles.ApplyForegroundGrad(s, r, o.TitleColorA, o.TitleColorB))
-	}
-	crush = b.String()
+	// Apply gradient to title
+	gradTitle := styles.ApplyBoldForegroundGrad(s, title, o.TitleColorA, o.TitleColorB)
 
-	// Charm and version.
-	metaRowGap := 1
-	maxVersionWidth := crushWidth - lipgloss.Width(charm) - metaRowGap
-	version = ansi.Truncate(version, maxVersionWidth, "…") // truncate version if too long.
-	gap := max(0, crushWidth-lipgloss.Width(charm)-lipgloss.Width(version))
-	metaRow := fg(o.CharmColor, charm) + strings.Repeat(" ", gap) + fg(o.VersionColor, version)
+	// Version
+	versionStr := fg(o.VersionColor, version)
 
-	// Join the meta row and big Kuroryuu title.
-	crush = strings.TrimSpace(metaRow + "\n" + crush)
-
-	// Narrow version.
 	if compact {
-		field := fg(o.FieldColor, strings.Repeat(diag, crushWidth))
-		return strings.Join([]string{field, field, crush, field, ""}, "\n")
+		// Compact sidebar version
+		field := fg(o.FieldColor, strings.Repeat(diag, titleWidth))
+		return strings.Join([]string{field, gradTitle, field, ""}, "\n")
 	}
 
-	fieldHeight := lipgloss.Height(crush)
+	// Wide version
+	gap := max(1, titleWidth-lipgloss.Width(version))
+	metaRow := fg(o.CharmColor, " Kuroryuu") + strings.Repeat(" ", gap) + versionStr
+	metaWidth := lipgloss.Width(metaRow)
+	contentWidth := max(titleWidth, metaWidth)
 
-	// Left field.
-	const leftWidth = 6
+	// Left field
+	const leftWidth = 4
 	leftFieldRow := fg(o.FieldColor, strings.Repeat(diag, leftWidth))
+	fieldHeight := 3 // meta + title + bottom line
 	leftField := new(strings.Builder)
 	for range fieldHeight {
 		fmt.Fprintln(leftField, leftFieldRow)
 	}
 
-	// Right field.
-	rightWidth := max(15, o.Width-crushWidth-leftWidth-2) // 2 for the gap.
-	const stepDownAt = 0
+	// Right field
+	rightWidth := max(10, o.Width-contentWidth-leftWidth-2)
 	rightField := new(strings.Builder)
 	for i := range fieldHeight {
-		width := rightWidth
-		if i >= stepDownAt {
-			width = rightWidth - (i - stepDownAt)
+		w := rightWidth - i
+		if w < 0 {
+			w = 0
 		}
-		fmt.Fprint(rightField, fg(o.FieldColor, strings.Repeat(diag, width)), "\n")
+		fmt.Fprintln(rightField, fg(o.FieldColor, strings.Repeat(diag, w)))
 	}
 
-	// Return the wide version.
+	// Assemble center content
+	bottomLine := fg(o.FieldColor, strings.Repeat(diag, contentWidth))
+	center := strings.Join([]string{metaRow, gradTitle, bottomLine}, "\n")
+
 	const hGap = " "
-	logo := lipgloss.JoinHorizontal(lipgloss.Top, leftField.String(), hGap, crush, hGap, rightField.String())
+	logo := lipgloss.JoinHorizontal(lipgloss.Top, leftField.String(), hGap, center, hGap, rightField.String())
 	if o.Width > 0 {
-		// Truncate the logo to the specified width.
 		lines := strings.Split(logo, "\n")
 		for i, line := range lines {
 			lines[i] = ansi.Truncate(line, o.Width, "")
@@ -115,231 +144,14 @@ func Render(s *styles.Styles, version string, compact bool, o Opts) string {
 	return logo
 }
 
-// SmallRender renders a smaller version of the Kuroryuu logo, suitable for
-// smaller windows or sidebar usage.
+// SmallRender renders a compact version of the Kuroryuu logo.
 func SmallRender(t *styles.Styles, width int) string {
-	title := t.Base.Foreground(t.Secondary).Render("Kuroryuu")
+	title := t.Base.Foreground(t.Secondary).Render("黒竜")
 	title = fmt.Sprintf("%s %s", title, styles.ApplyBoldForegroundGrad(t, "Kuroryuu", t.Secondary, t.Primary))
-	remainingWidth := width - lipgloss.Width(title) - 1 // 1 for the space after "Kuroryuu"
+	remainingWidth := width - lipgloss.Width(title) - 1
 	if remainingWidth > 0 {
 		lines := strings.Repeat("╱", remainingWidth)
 		title = fmt.Sprintf("%s %s", title, t.Base.Foreground(t.Primary).Render(lines))
 	}
 	return title
-}
-
-// renderWord renders letterforms to fork a word. stretchIndex is the index of
-// the letter to stretch, or -1 if no letter should be stretched.
-func renderWord(spacing int, stretchIndex int, letterforms ...letterform) string {
-	if spacing < 0 {
-		spacing = 0
-	}
-
-	renderedLetterforms := make([]string, len(letterforms))
-
-	// pick one letter randomly to stretch
-	for i, letter := range letterforms {
-		renderedLetterforms[i] = letter(i == stretchIndex)
-	}
-
-	if spacing > 0 {
-		// Add spaces between the letters and render.
-		renderedLetterforms = slice.Intersperse(renderedLetterforms, strings.Repeat(" ", spacing))
-	}
-	return strings.TrimSpace(
-		lipgloss.JoinHorizontal(lipgloss.Top, renderedLetterforms...),
-	)
-}
-
-// letterC renders the letter C in a stylized way. It takes an integer that
-// determines how many cells to stretch the letter. If the stretch is less than
-// 1, it defaults to no stretching.
-func letterC(stretch bool) string {
-	// Here's what we're making:
-	//
-	// ▄▀▀▀▀
-	// █
-	//	▀▀▀▀
-
-	left := heredoc.Doc(`
-		▄
-		█
-	`)
-	right := heredoc.Doc(`
-		▀
-
-		▀
-	`)
-	return joinLetterform(
-		left,
-		stretchLetterformPart(right, letterformProps{
-			stretch:    stretch,
-			width:      4,
-			minStretch: 7,
-			maxStretch: 12,
-		}),
-	)
-}
-
-// letterH renders the letter H in a stylized way. It takes an integer that
-// determines how many cells to stretch the letter. If the stretch is less than
-// 1, it defaults to no stretching.
-func letterH(stretch bool) string {
-	// Here's what we're making:
-	//
-	// █   █
-	// █▀▀▀█
-	// ▀   ▀
-
-	side := heredoc.Doc(`
-		█
-		█
-		▀`)
-	middle := heredoc.Doc(`
-
-		▀
-	`)
-	return joinLetterform(
-		side,
-		stretchLetterformPart(middle, letterformProps{
-			stretch:    stretch,
-			width:      3,
-			minStretch: 8,
-			maxStretch: 12,
-		}),
-		side,
-	)
-}
-
-// letterR renders the letter R in a stylized way. It takes an integer that
-// determines how many cells to stretch the letter. If the stretch is less than
-// 1, it defaults to no stretching.
-func letterR(stretch bool) string {
-	// Here's what we're making:
-	//
-	// █▀▀▀▄
-	// █▀▀▀▄
-	// ▀   ▀
-
-	left := heredoc.Doc(`
-		█
-		█
-		▀
-	`)
-	center := heredoc.Doc(`
-		▀
-		▀
-	`)
-	right := heredoc.Doc(`
-		▄
-		▄
-		▀
-	`)
-	return joinLetterform(
-		left,
-		stretchLetterformPart(center, letterformProps{
-			stretch:    stretch,
-			width:      3,
-			minStretch: 7,
-			maxStretch: 12,
-		}),
-		right,
-	)
-}
-
-// letterSStylized renders the letter S in a stylized way, more so than
-// [letterS]. It takes an integer that determines how many cells to stretch the
-// letter. If the stretch is less than 1, it defaults to no stretching.
-func letterSStylized(stretch bool) string {
-	// Here's what we're making:
-	//
-	// ▄▀▀▀▀▀
-	// ▀▀▀▀▀█
-	// ▀▀▀▀▀
-
-	left := heredoc.Doc(`
-		▄
-		▀
-		▀
-	`)
-	center := heredoc.Doc(`
-		▀
-		▀
-		▀
-	`)
-	right := heredoc.Doc(`
-		▀
-		█
-	`)
-	return joinLetterform(
-		left,
-		stretchLetterformPart(center, letterformProps{
-			stretch:    stretch,
-			width:      3,
-			minStretch: 7,
-			maxStretch: 12,
-		}),
-		right,
-	)
-}
-
-// letterU renders the letter U in a stylized way. It takes an integer that
-// determines how many cells to stretch the letter. If the stretch is less than
-// 1, it defaults to no stretching.
-func letterU(stretch bool) string {
-	// Here's what we're making:
-	//
-	// █   █
-	// █   █
-	//	▀▀▀
-
-	side := heredoc.Doc(`
-		█
-		█
-	`)
-	middle := heredoc.Doc(`
-
-
-		▀
-	`)
-	return joinLetterform(
-		side,
-		stretchLetterformPart(middle, letterformProps{
-			stretch:    stretch,
-			width:      3,
-			minStretch: 7,
-			maxStretch: 12,
-		}),
-		side,
-	)
-}
-
-func joinLetterform(letters ...string) string {
-	return lipgloss.JoinHorizontal(lipgloss.Top, letters...)
-}
-
-// letterformProps defines letterform stretching properties.
-// for readability.
-type letterformProps struct {
-	width      int
-	minStretch int
-	maxStretch int
-	stretch    bool
-}
-
-// stretchLetterformPart is a helper function for letter stretching. If randomize
-// is false the minimum number will be used.
-func stretchLetterformPart(s string, p letterformProps) string {
-	if p.maxStretch < p.minStretch {
-		p.minStretch, p.maxStretch = p.maxStretch, p.minStretch
-	}
-	n := p.width
-	if p.stretch {
-		n = cachedRandN(p.maxStretch-p.minStretch) + p.minStretch //nolint:gosec
-	}
-	parts := make([]string, n)
-	for i := range parts {
-		parts[i] = s
-	}
-	return lipgloss.JoinHorizontal(lipgloss.Top, parts...)
 }

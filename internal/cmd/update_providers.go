@@ -6,7 +6,6 @@ import (
 
 	"charm.land/lipgloss/v2"
 	"github.com/ahostbr/crush/internal/config"
-	"github.com/charmbracelet/x/exp/charmtone"
 	"github.com/spf13/cobra"
 )
 
@@ -61,8 +60,8 @@ kuroryuu update-providers --source=hyper https://hyper.example.com
 		// NOTE(@andreynering): This style is more-or-less copied from Fang's
 		// error message, adapted for success.
 		headerStyle := lipgloss.NewStyle().
-			Foreground(charmtone.Butter).
-			Background(charmtone.Guac).
+			Foreground(lipgloss.Color("#0D0D0D")).
+			Background(lipgloss.Color("#4A8C4A")).
 			Bold(true).
 			Padding(0, 1).
 			Margin(1).
