@@ -3318,7 +3318,7 @@ func renderLogo(t *styles.Styles, compact bool, width int) string {
 		FieldColor:   t.LogoFieldColor,
 		TitleColorA:  t.LogoTitleColorA,
 		TitleColorB:  t.LogoTitleColorB,
-		CharmColor:   t.LogoCharmColor,
+		CharmColor:   t.LogoBrandColor,
 		VersionColor: t.LogoVersionColor,
 		Width:        width,
 	})
