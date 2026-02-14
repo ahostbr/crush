@@ -300,7 +300,7 @@ func TestCachePathFor(t *testing.T) {
 			if tt.expected != "" {
 				require.Equal(t, tt.expected, filepath.ToSlash(result))
 			} else {
-				require.Contains(t, result, "crush")
+				require.Contains(t, result, "kuroryuu")
 				require.Contains(t, result, "providers.json")
 			}
 		})

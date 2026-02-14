@@ -8,9 +8,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/charmbracelet/crush/internal/agent/tools/mcp"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/home"
+	"github.com/ahostbr/crush/internal/agent/tools/mcp"
+	"github.com/ahostbr/crush/internal/config"
+	"github.com/ahostbr/crush/internal/home"
 )
 
 var namedArgPattern = regexp.MustCompile(`\$([A-Z][A-Z0-9_]*)`)
@@ -103,7 +103,7 @@ func buildCommandSources(cfg *config.Config) []commandSource {
 	// Home directory
 	if home := home.Dir(); home != "" {
 		sources = append(sources, commandSource{
-			path:   filepath.Join(home, ".crush", "commands"),
+			path:   filepath.Join(home, ".kuroryuu", "commands"),
 			prefix: userCommandPrefix,
 		})
 	}
@@ -211,7 +211,7 @@ func getXDGCommandsDir() string {
 		}
 	}
 	if xdgHome != "" {
-		return filepath.Join(xdgHome, "crush", "commands")
+		return filepath.Join(xdgHome, "kuroryuu", "commands")
 	}
 	return ""
 }

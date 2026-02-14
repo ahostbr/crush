@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "Bash(grep:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(bash rebrand.sh)",
+      "Bash(bash /mnt/e/SAS/REPO_CLONES/crush/rebrand.sh)",
+      "Bash(find:*)",
+      "Bash(echo:*)",
+      "Bash(git checkout:*)"
     ]
   }
 }

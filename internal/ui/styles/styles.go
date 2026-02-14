@@ -12,7 +12,7 @@ import (
 	"charm.land/glamour/v2/ansi"
 	"charm.land/lipgloss/v2"
 	"github.com/alecthomas/chroma/v2"
-	"github.com/charmbracelet/crush/internal/ui/diffview"
+	"github.com/ahostbr/crush/internal/ui/diffview"
 	"github.com/charmbracelet/x/exp/charmtone"
 )
 
@@ -162,7 +162,7 @@ type Styles struct {
 	LogoFieldColor   color.Color
 	LogoTitleColorA  color.Color
 	LogoTitleColorB  color.Color
-	LogoCharmColor   color.Color
+	LogoBrandColor   color.Color
 	LogoVersionColor color.Color
 
 	// Colors - semantic colors for tool rendering.
@@ -1190,7 +1190,7 @@ func DefaultStyles() Styles {
 	s.LogoFieldColor = primary
 	s.LogoTitleColorA = secondary
 	s.LogoTitleColorB = primary
-	s.LogoCharmColor = secondary
+	s.LogoBrandColor = secondary
 	s.LogoVersionColor = primary
 
 	// Section

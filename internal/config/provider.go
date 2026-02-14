@@ -17,9 +17,9 @@ import (
 
 	"charm.land/catwalk/pkg/catwalk"
 	"charm.land/catwalk/pkg/embedded"
-	"github.com/charmbracelet/crush/internal/agent/hyper"
-	"github.com/charmbracelet/crush/internal/csync"
-	"github.com/charmbracelet/crush/internal/home"
+	"github.com/ahostbr/crush/internal/agent/hyper"
+	"github.com/ahostbr/crush/internal/csync"
+	"github.com/ahostbr/crush/internal/home"
 	"github.com/charmbracelet/x/etag"
 )
 
@@ -144,43 +144,53 @@ func Providers(cfg *Config) ([]catwalk.Provider, error) {
 		var wg sync.WaitGroup
 		var errs []error
 		providers := csync.NewSlice[catwalk.Provider]()
-		autoupdate := !cfg.Options.DisableProviderAutoUpdate
+		// KURORYUU: autoupdate no longer needed since we always use embedded providers
+		_ = cfg.Options.DisableProviderAutoUpdate // autoupdate := !cfg.Options.DisableProviderAutoUpdate
 		customProvidersOnly := cfg.Options.DisableDefaultProviders
 
-		ctx, cancel := context.WithTimeout(context.Background(), 45*time.Second)
+		// KURORYUU: ctx no longer needed since HTTP fetches are disabled
+		_, cancel := context.WithTimeout(context.Background(), 45*time.Second)
 		defer cancel()
 
 		wg.Go(func() {
 			if customProvidersOnly {
 				return
 			}
-			catwalkURL := cmp.Or(os.Getenv("CATWALK_URL"), defaultCatwalkURL)
-			client := catwalk.NewWithURL(catwalkURL)
-			path := cachePathFor("providers")
-			catwalkSyncer.Init(client, path, autoupdate)
-
-			items, err := catwalkSyncer.Get(ctx)
-			if err != nil {
-				catwalkURL := fmt.Sprintf("%s/v2/providers", cmp.Or(os.Getenv("CATWALK_URL"), defaultCatwalkURL))
-				errs = append(errs, fmt.Errorf("Crush was unable to fetch an updated list of providers from %s. Consider setting CRUSH_DISABLE_PROVIDER_AUTO_UPDATE=1 to use the embedded providers bundled at the time of this Crush release. You can also update providers manually. For more info see crush update-providers --help.\n\nCause: %w", catwalkURL, providerErr)) //nolint:staticcheck
-				return
-			}
-			providers.Append(items...)
+			// KURORYUU: Charm catwalk backend disabled — using embedded providers only
+			// The HTTP fetch logic below has been commented out so we always
+			// fall through to the embedded provider data bundled at build time.
+			slog.Info("Using embedded Catwalk providers (catwalk backend disabled)")
+			providers.Append(embedded.GetAll()...)
+			// catwalkURL := cmp.Or(os.Getenv("CATWALK_URL"), defaultCatwalkURL)
+			// client := catwalk.NewWithURL(catwalkURL)
+			// path := cachePathFor("providers")
+			// catwalkSyncer.Init(client, path, autoupdate)
+			//
+			// items, err := catwalkSyncer.Get(ctx)
+			// if err != nil {
+			// 	catwalkURL := fmt.Sprintf("%s/v2/providers", cmp.Or(os.Getenv("CATWALK_URL"), defaultCatwalkURL))
+			// 	errs = append(errs, fmt.Errorf("Kuroryuu was unable to fetch an updated list of providers from %s. Consider setting KURORYUU_DISABLE_PROVIDER_AUTO_UPDATE=1 to use the embedded providers bundled at the time of this Kuroryuu release. You can also update providers manually. For more info see kuroryuu update-providers --help.\n\nCause: %w", catwalkURL, providerErr)) //nolint:staticcheck
+			// 	return
+			// }
+			// providers.Append(items...)
 		})
 
 		wg.Go(func() {
 			if customProvidersOnly || !hyper.Enabled() {
 				return
 			}
-			path := cachePathFor("hyper")
-			hyperSyncer.Init(realHyperClient{baseURL: hyper.BaseURL()}, path, autoupdate)
-
-			item, err := hyperSyncer.Get(ctx)
-			if err != nil {
-				errs = append(errs, fmt.Errorf("Crush was unable to fetch updated information from Hyper: %w", err)) //nolint:staticcheck
-				return
-			}
-			providers.Append(item)
+			// KURORYUU: Charm Hyper backend disabled — using embedded Hyper provider only
+			slog.Info("Using embedded Hyper provider (Hyper backend disabled)")
+			providers.Append(hyper.Embedded())
+			// path := cachePathFor("hyper")
+			// hyperSyncer.Init(realHyperClient{baseURL: hyper.BaseURL()}, path, autoupdate)
+			//
+			// item, err := hyperSyncer.Get(ctx)
+			// if err != nil {
+			// 	errs = append(errs, fmt.Errorf("Kuroryuu was unable to fetch updated information from Hyper: %w", err)) //nolint:staticcheck
+			// 	return
+			// }
+			// providers.Append(item)
 		})
 
 		wg.Wait()

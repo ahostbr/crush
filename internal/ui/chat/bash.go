@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"charm.land/lipgloss/v2"
-	"github.com/charmbracelet/crush/internal/agent/tools"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/ui/styles"
+	"github.com/ahostbr/crush/internal/agent/tools"
+	"github.com/ahostbr/crush/internal/message"
+	"github.com/ahostbr/crush/internal/ui/styles"
 	"github.com/charmbracelet/x/ansi"
 )
 

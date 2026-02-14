@@ -24,5 +24,5 @@ jobs:
           commit_message: "chore: auto-update files"
           branch: main
           commit_user_name: Charm
-          commit_user_email: 124303983+charmcli@users.noreply.github.com
-          commit_author: Charm <124303983+charmcli@users.noreply.github.com>
+          commit_user_email: 124303983+cli@kuroryuu.com
+          commit_author: Charm <124303983+cli@kuroryuu.com>

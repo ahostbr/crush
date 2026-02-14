@@ -7,9 +7,9 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/catwalk/pkg/catwalk"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/oauth/hyper"
-	"github.com/charmbracelet/crush/internal/ui/common"
+	"github.com/ahostbr/crush/internal/config"
+	"github.com/ahostbr/crush/internal/oauth/hyper"
+	"github.com/ahostbr/crush/internal/ui/common"
 )
 
 func NewOAuthHyper(

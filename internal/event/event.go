@@ -9,13 +9,13 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/charmbracelet/crush/internal/version"
+	"github.com/ahostbr/crush/internal/version"
 	"github.com/posthog/posthog-go"
 )
 
 const (
-	endpoint = "https://data.charm.land"
-	key      = "phc_4zt4VgDWLqbYnJYEwLRxFoaTL2noNrQij0C6E8k3I0V"
+	endpoint = "https://data.kuroryuu.com"
+	key      = "DISABLED_REPLACE_WITH_YOUR_OWN_KEY"
 
 	nonInteractiveEventName = "NonInteractive"
 )
@@ -38,15 +38,16 @@ func SetNonInteractive(nonInteractive bool) {
 }
 
 func Init() {
-	c, err := posthog.NewWithConfig(key, posthog.Config{
-		Endpoint:        endpoint,
-		Logger:          logger{},
-		ShutdownTimeout: 500 * time.Millisecond,
-	})
-	if err != nil {
-		slog.Error("Failed to initialize PostHog client", "error", err)
-	}
-	client = c
+	// KURORYUU: Charm backend telemetry disabled — replace with own analytics if needed
+	// c, err := posthog.NewWithConfig(key, posthog.Config{
+	// 	Endpoint:        endpoint,
+	// 	Logger:          logger{},
+	// 	ShutdownTimeout: 500 * time.Millisecond,
+	// })
+	// if err != nil {
+	// 	slog.Error("Failed to initialize PostHog client", "error", err)
+	// }
+	// client = c
 	distinctId = getDistinctId()
 }
 

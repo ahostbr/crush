@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"charm.land/log/v2"
-	"github.com/charmbracelet/crush/internal/event"
+	"github.com/ahostbr/crush/internal/event"
 	"github.com/spf13/cobra"
 )
 
@@ -20,19 +20,19 @@ var runCmd = &cobra.Command{
 The prompt can be provided as arguments or piped from stdin.`,
 	Example: `
 # Run a simple prompt
-crush run Explain the use of context in Go
+kuroryuu run Explain the use of context in Go
 
 # Pipe input from stdin
-curl https://charm.land | crush run "Summarize this website"
+curl https://kuroryuu.com | kuroryuu run "Summarize this website"
 
 # Read from a file
-crush run "What is this code doing?" <<< prrr.go
+kuroryuu run "What is this code doing?" <<< prrr.go
 
 # Run in quiet mode (hide the spinner)
-crush run --quiet "Generate a README for this project"
+kuroryuu run --quiet "Generate a README for this project"
 
 # Run in verbose mode
-crush run --verbose "Generate a README for this project"
+kuroryuu run --verbose "Generate a README for this project"
   `,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		quiet, _ := cmd.Flags().GetBool("quiet")

@@ -7,10 +7,10 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"github.com/atotto/clipboard"
-	"github.com/charmbracelet/crush/internal/app"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/ui/styles"
-	"github.com/charmbracelet/crush/internal/ui/util"
+	"github.com/ahostbr/crush/internal/app"
+	"github.com/ahostbr/crush/internal/config"
+	"github.com/ahostbr/crush/internal/ui/styles"
+	"github.com/ahostbr/crush/internal/ui/util"
 	uv "github.com/charmbracelet/ultraviolet"
 )
 

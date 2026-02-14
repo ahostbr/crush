@@ -8,9 +8,9 @@ import (
 	"log/slog"
 	"strings"
 
-	"github.com/charmbracelet/crush/internal/db"
-	"github.com/charmbracelet/crush/internal/event"
-	"github.com/charmbracelet/crush/internal/pubsub"
+	"github.com/ahostbr/crush/internal/db"
+	"github.com/ahostbr/crush/internal/event"
+	"github.com/ahostbr/crush/internal/pubsub"
 	"github.com/google/uuid"
 )
 

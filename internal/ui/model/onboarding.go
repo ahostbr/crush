@@ -9,11 +9,11 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 
-	"github.com/charmbracelet/crush/internal/agent"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/home"
-	"github.com/charmbracelet/crush/internal/ui/common"
-	"github.com/charmbracelet/crush/internal/ui/util"
+	"github.com/ahostbr/crush/internal/agent"
+	"github.com/ahostbr/crush/internal/config"
+	"github.com/ahostbr/crush/internal/home"
+	"github.com/ahostbr/crush/internal/ui/common"
+	"github.com/ahostbr/crush/internal/ui/util"
 )
 
 // markProjectInitialized marks the current project as initialized in the config.

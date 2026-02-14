@@ -1,4 +1,4 @@
-# Crush Development Guide
+# Kuroryuu CLI Development Guide
 
 ## Build/Test/Lint Commands
 

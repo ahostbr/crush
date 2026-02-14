@@ -1,22 +1,22 @@
-# Crush
+# Kuroryuu
 
 <p align="center">
-    <a href="https://stuff.charm.sh/crush/charm-crush.png"><img width="450" alt="Charm Crush Logo" src="https://github.com/user-attachments/assets/cf8ca3ce-8b02-43f0-9d0f-5a331488da4b" /></a><br />
-    <a href="https://github.com/charmbracelet/crush/releases"><img src="https://img.shields.io/github/release/charmbracelet/crush" alt="Latest Release"></a>
-    <a href="https://github.com/charmbracelet/crush/actions"><img src="https://github.com/charmbracelet/crush/actions/workflows/build.yml/badge.svg" alt="Build Status"></a>
+    <a href="https://stuff.kuroryuu.com/kuroryuu/charm-kuroryuu.png"><img width="450" alt="Charm Kuroryuu Logo" src="https://github.com/user-attachments/assets/cf8ca3ce-8b02-43f0-9d0f-5a331488da4b" /></a><br />
+    <a href="https://github.com/ahostbr/kuroryuu/releases"><img src="https://img.shields.io/github/release/charmbracelet/kuroryuu" alt="Latest Release"></a>
+    <a href="https://github.com/ahostbr/kuroryuu/actions"><img src="https://github.com/ahostbr/kuroryuu/actions/workflows/build.yml/badge.svg" alt="Build Status"></a>
 </p>
 
 <p align="center">Your new coding bestie, now available in your favourite terminal.<br />Your tools, your code, and your workflows, wired into your LLM of choice.</p>
 <p align="center">终端里的编程新搭档，<br />无缝接入你的工具、代码与工作流，全面兼容主流 LLM 模型。</p>
 
-<p align="center"><img width="800" alt="Crush Demo" src="https://github.com/user-attachments/assets/58280caf-851b-470a-b6f7-d5c4ea8a1968" /></p>
+<p align="center"><img width="800" alt="Kuroryuu Demo" src="https://github.com/user-attachments/assets/58280caf-851b-470a-b6f7-d5c4ea8a1968" /></p>
 
 ## Features
 
 - **Multi-Model:** choose from a wide range of LLMs or add your own via OpenAI- or Anthropic-compatible APIs
 - **Flexible:** switch LLMs mid-session while preserving context
 - **Session-Based:** maintain multiple work sessions and contexts per project
-- **LSP-Enhanced:** Crush uses LSPs for additional context, just like you do
+- **LSP-Enhanced:** Kuroryuu uses LSPs for additional context, just like you do
 - **Extensible:** add capabilities via MCPs (`http`, `stdio`, and `sse`)
 - **Works Everywhere:** first-class support in every terminal on macOS, Linux, Windows (PowerShell and WSL), Android, FreeBSD, OpenBSD, and NetBSD
 - **Industrial Grade:** built on the Charm ecosystem, powering 25k+ applications, from leading open source projects to business-critical infrastructure
@@ -27,51 +27,51 @@ Use a package manager:
 
 ```bash
 # Homebrew
-brew install charmbracelet/tap/crush
+brew install charmbracelet/tap/kuroryuu
 
 # NPM
-npm install -g @charmland/crush
+npm install -g @charmland/kuroryuu
 
 # Arch Linux (btw)
-yay -S crush-bin
+yay -S kuroryuu-bin
 
 # Nix
-nix run github:numtide/nix-ai-tools#crush
+nix run github:numtide/nix-ai-tools#kuroryuu
 
 # FreeBSD
-pkg install crush
+pkg install kuroryuu
 ```
 
 Windows users:
 
 ```bash
 # Winget
-winget install charmbracelet.crush
+winget install charmbracelet.kuroryuu
 
 # Scoop
 scoop bucket add charm https://github.com/charmbracelet/scoop-bucket.git
-scoop install crush
+scoop install kuroryuu
 ```
 
 <details>
 <summary><strong>Nix (NUR)</strong></summary>
 
-Crush is available via the official Charm [NUR](https://github.com/nix-community/NUR) in `nur.repos.charmbracelet.crush`, which is the most up-to-date way to get Crush in Nix.
+Kuroryuu is available via the official Charm [NUR](https://github.com/nix-community/NUR) in `nur.repos.charmbracelet.kuroryuu`, which is the most up-to-date way to get Kuroryuu in Nix.
 
-You can also try out Crush via the NUR with `nix-shell`:
+You can also try out Kuroryuu via the NUR with `nix-shell`:
 
 ```bash
 # Add the NUR channel.
 nix-channel --add https://github.com/nix-community/NUR/archive/main.tar.gz nur
 nix-channel --update
 
-# Get Crush in a Nix shell.
-nix-shell -p '(import <nur> { pkgs = import <nixpkgs> {}; }).repos.charmbracelet.crush'
+# Get Kuroryuu in a Nix shell.
+nix-shell -p '(import <nur> { pkgs = import <nixpkgs> {}; }).repos.charmbracelet.kuroryuu'
 ```
 
 ### NixOS & Home Manager Module Usage via NUR
 
-Crush provides NixOS and Home Manager modules via NUR.
+Kuroryuu provides NixOS and Home Manager modules via NUR.
 You can use these modules directly in your flake by importing them from NUR. Since it auto detects whether its a home manager or nixos context you can use the import the exact same way :)
 
 ```nix
@@ -86,9 +86,9 @@ You can use these modules directly in your flake by importing them from NUR. Sin
       system = "x86_64-linux";
       modules = [
         nur.modules.nixos.default
-        nur.repos.charmbracelet.modules.crush
+        nur.repos.charmbracelet.modules.kuroryuu
         {
-          programs.crush = {
+          programs.kuroryuu = {
             enable = true;
             settings = {
               providers = {
@@ -131,9 +131,9 @@ You can use these modules directly in your flake by importing them from NUR. Sin
 
 ```bash
 sudo mkdir -p /etc/apt/keyrings
-curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
-echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
-sudo apt update && sudo apt install crush
+curl -fsSL https://repo.kuroryuu.com/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.kuroryuu.com/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+sudo apt update && sudo apt install kuroryuu
 ```
 
 </details>
@@ -144,11 +144,11 @@ sudo apt update && sudo apt install crush
 ```bash
 echo '[charm]
 name=Charm
-baseurl=https://repo.charm.sh/yum/
+baseurl=https://repo.kuroryuu.com/yum/
 enabled=1
 gpgcheck=1
-gpgkey=https://repo.charm.sh/yum/gpg.key' | sudo tee /etc/yum.repos.d/charm.repo
-sudo yum install crush
+gpgkey=https://repo.kuroryuu.com/yum/gpg.key' | sudo tee /etc/yum.repos.d/charm.repo
+sudo yum install kuroryuu
 ```
 
 </details>
@@ -158,16 +158,16 @@ Or, download it:
 - [Packages][releases] are available in Debian and RPM formats
 - [Binaries][releases] are available for Linux, macOS, Windows, FreeBSD, OpenBSD, and NetBSD
 
-[releases]: https://github.com/charmbracelet/crush/releases
+[releases]: https://github.com/ahostbr/kuroryuu/releases
 
 Or just install it with Go:
 
 ```
-go install github.com/charmbracelet/crush@latest
+go install github.com/ahostbr/kuroryuu@latest
 ```
 
 > [!WARNING]
-> Productivity may increase when using Crush and you may find yourself nerd
+> Productivity may increase when using Kuroryuu and you may find yourself nerd
 > sniped when first using the application. If the symptoms persist, join the
 > [Discord][discord] and nerd snipe the rest of us.
 
@@ -175,7 +175,7 @@ go install github.com/charmbracelet/crush@latest
 
 The quickest way to get started is to grab an API key for your preferred
 provider such as Anthropic, OpenAI, Groq, OpenRouter, or Vercel AI Gateway and just start
-Crush. You'll be prompted to enter your API key.
+Kuroryuu. You'll be prompted to enter your API key.
 
 That said, you can also set environment variables for preferred providers.
 
@@ -207,7 +207,7 @@ That said, you can also set environment variables for preferred providers.
 ### Subscriptions
 
 If you prefer subscription-based usage, here are some plans that work well in
-Crush:
+Kuroryuu:
 
 - [Synthetic](https://synthetic.new/pricing)
 - [GLM Coding Plan](https://z.ai/subscribe)
@@ -216,21 +216,21 @@ Crush:
 
 ### By the Way
 
-Is there a provider you’d like to see in Crush? Is there an existing model that needs an update?
+Is there a provider you’d like to see in Kuroryuu? Is there an existing model that needs an update?
 
-Crush’s default model listing is managed in [Catwalk](https://github.com/charmbracelet/catwalk), a community-supported, open source repository of Crush-compatible models, and you’re welcome to contribute.
+Kuroryuu’s default model listing is managed in [Catwalk](https://github.com/charmbracelet/catwalk), a community-supported, open source repository of Kuroryuu-compatible models, and you’re welcome to contribute.
 
 <a href="https://github.com/charmbracelet/catwalk"><img width="174" height="174" alt="Catwalk Badge" src="https://github.com/user-attachments/assets/95b49515-fe82-4409-b10d-5beb0873787d" /></a>
 
 ## Configuration
 
-Crush runs great with no configuration. That said, if you do need or want to
-customize Crush, configuration can be added either local to the project itself,
+Kuroryuu runs great with no configuration. That said, if you do need or want to
+customize Kuroryuu, configuration can be added either local to the project itself,
 or globally, with the following priority:
 
-1. `.crush.json`
-2. `crush.json`
-3. `$HOME/.config/crush/crush.json`
+1. `.kuroryuu.json`
+2. `kuroryuu.json`
+3. `$HOME/.config/kuroryuu/kuroryuu.json`
 
 Configuration itself is stored as a JSON object:
 
@@ -241,29 +241,29 @@ Configuration itself is stored as a JSON object:
 }
 ```
 
-As an additional note, Crush also stores ephemeral data, such as application state, in one additional location:
+As an additional note, Kuroryuu also stores ephemeral data, such as application state, in one additional location:
 
 ```bash
 # Unix
-$HOME/.local/share/crush/crush.json
+$HOME/.local/share/kuroryuu/kuroryuu.json
 
 # Windows
-%LOCALAPPDATA%\crush\crush.json
+%LOCALAPPDATA%\kuroryuu\kuroryuu.json
 ```
 
 > [!TIP]
 > You can override the user and data config locations by setting:
-> * `CRUSH_GLOBAL_CONFIG`
-> * `CRUSH_GLOBAL_DATA`
+> * `KURORYUU_GLOBAL_CONFIG`
+> * `KURORYUU_GLOBAL_DATA`
 
 ### LSPs
 
-Crush can use LSPs for additional context to help inform its decisions, just
+Kuroryuu can use LSPs for additional context to help inform its decisions, just
 like you would. LSPs can be added manually like so:
 
 ```json
 {
-  "$schema": "https://charm.land/crush.json",
+  "$schema": "https://kuroryuu.com/kuroryuu.json",
   "lsp": {
     "go": {
       "command": "gopls",
@@ -284,14 +284,14 @@ like you would. LSPs can be added manually like so:
 
 ### MCPs
 
-Crush also supports Model Context Protocol (MCP) servers through three
+Kuroryuu also supports Model Context Protocol (MCP) servers through three
 transport types: `stdio` for command-line servers, `http` for HTTP endpoints,
 and `sse` for Server-Sent Events. Environment variable expansion is supported
 using `$(echo $VAR)` syntax.
 
 ```json
 {
-  "$schema": "https://charm.land/crush.json",
+  "$schema": "https://kuroryuu.com/kuroryuu.json",
   "mcp": {
     "filesystem": {
       "type": "stdio",
@@ -329,23 +329,23 @@ using `$(echo $VAR)` syntax.
 
 ### Ignoring Files
 
-Crush respects `.gitignore` files by default, but you can also create a
-`.crushignore` file to specify additional files and directories that Crush
+Kuroryuu respects `.gitignore` files by default, but you can also create a
+`.kuroryuuignore` file to specify additional files and directories that Kuroryuu
 should ignore. This is useful for excluding files that you want in version
-control but don't want Crush to consider when providing context.
+control but don't want Kuroryuu to consider when providing context.
 
-The `.crushignore` file uses the same syntax as `.gitignore` and can be placed
+The `.kuroryuuignore` file uses the same syntax as `.gitignore` and can be placed
 in the root of your project or in subdirectories.
 
 ### Allowing Tools
 
-By default, Crush will ask you for permission before running tool calls. If
+By default, Kuroryuu will ask you for permission before running tool calls. If
 you'd like, you can allow tools to be executed without prompting you for
 permissions. Use this with care.
 
 ```json
 {
-  "$schema": "https://charm.land/crush.json",
+  "$schema": "https://kuroryuu.com/kuroryuu.json",
   "permissions": {
     "allowed_tools": [
       "view",
@@ -358,18 +358,18 @@ permissions. Use this with care.
 }
 ```
 
-You can also skip all permission prompts entirely by running Crush with the
+You can also skip all permission prompts entirely by running Kuroryuu with the
 `--yolo` flag. Be very, very careful with this feature.
 
 ### Disabling Built-In Tools
 
-If you'd like to prevent Crush from using certain built-in tools entirely, you
+If you'd like to prevent Kuroryuu from using certain built-in tools entirely, you
 can disable them via the `options.disabled_tools` list. Disabled tools are
 completely hidden from the agent.
 
 ```json
 {
-  "$schema": "https://charm.land/crush.json",
+  "$schema": "https://kuroryuu.com/kuroryuu.json",
   "options": {
     "disabled_tools": [
       "bash",
@@ -383,23 +383,23 @@ To disable tools from MCP servers, see the [MCP config section](#mcps).
 
 ### Agent Skills
 
-Crush supports the [Agent Skills](https://agentskills.io) open standard for
+Kuroryuu supports the [Agent Skills](https://agentskills.io) open standard for
 extending agent capabilities with reusable skill packages. Skills are folders
-containing a `SKILL.md` file with instructions that Crush can discover and
+containing a `SKILL.md` file with instructions that Kuroryuu can discover and
 activate on demand.
 
 Skills are discovered from:
 
-- `~/.config/crush/skills/` on Unix (default, can be overridden with `CRUSH_SKILLS_DIR`)
-- `%LOCALAPPDATA%\crush\skills\` on Windows (default, can be overridden with `CRUSH_SKILLS_DIR`)
+- `~/.config/kuroryuu/skills/` on Unix (default, can be overridden with `KURORYUU_SKILLS_DIR`)
+- `%LOCALAPPDATA%\kuroryuu\skills\` on Windows (default, can be overridden with `KURORYUU_SKILLS_DIR`)
 - Additional paths configured via `options.skills_paths`
 
 ```jsonc
 {
-  "$schema": "https://charm.land/crush.json",
+  "$schema": "https://kuroryuu.com/kuroryuu.json",
   "options": {
     "skills_paths": [
-      "~/.config/crush/skills", // Windows: "%LOCALAPPDATA%\\crush\\skills",
+      "~/.config/kuroryuu/skills", // Windows: "%LOCALAPPDATA%\\kuroryuu\\skills",
       "./project-skills"
     ]
   }
@@ -410,30 +410,30 @@ You can get started with example skills from [anthropics/skills](https://github.
 
 ```bash
 # Unix
-mkdir -p ~/.config/crush/skills
-cd ~/.config/crush/skills
+mkdir -p ~/.config/kuroryuu/skills
+cd ~/.config/kuroryuu/skills
 git clone https://github.com/anthropics/skills.git _temp
 mv _temp/skills/* . && rm -rf _temp
 ```
 
 ```powershell
 # Windows (PowerShell)
-mkdir -Force "$env:LOCALAPPDATA\crush\skills"
-cd "$env:LOCALAPPDATA\crush\skills"
+mkdir -Force "$env:LOCALAPPDATA\kuroryuu\skills"
+cd "$env:LOCALAPPDATA\kuroryuu\skills"
 git clone https://github.com/anthropics/skills.git _temp
 mv _temp/skills/* . ; rm -r -force _temp
 ```
 
 ### Initialization
 
-When you initialize a project, Crush analyzes your codebase and creates
+When you initialize a project, Kuroryuu analyzes your codebase and creates
 a context file that helps it work more effectively in future sessions.
 By default, this file is named `AGENTS.md`, but you can customize the
 name and location with the `initialize_as` option:
 
 ```json
 {
-  "$schema": "https://charm.land/crush.json",
+  "$schema": "https://kuroryuu.com/kuroryuu.json",
   "options": {
     "initialize_as": "AGENTS.md"
   }
@@ -441,19 +441,19 @@ name and location with the `initialize_as` option:
 ```
 
 This is useful if you prefer a different naming convention or want to
-place the file in a specific directory (e.g., `CRUSH.md` or
-`docs/LLMs.md`). Crush will fill the file with project-specific context
+place the file in a specific directory (e.g., `KURORYUU.md` or
+`docs/LLMs.md`). Kuroryuu will fill the file with project-specific context
 like build commands, code patterns, and conventions it discovered during
 initialization.
 
 ### Attribution Settings
 
-By default, Crush adds attribution information to Git commits and pull requests
+By default, Kuroryuu adds attribution information to Git commits and pull requests
 it creates. You can customize this behavior with the `attribution` option:
 
 ```json
 {
-  "$schema": "https://charm.land/crush.json",
+  "$schema": "https://kuroryuu.com/kuroryuu.json",
   "options": {
     "attribution": {
       "trailer_style": "co-authored-by",
@@ -465,16 +465,16 @@ it creates. You can customize this behavior with the `attribution` option:
 
 - `trailer_style`: Controls the attribution trailer added to commit messages
   (default: `assisted-by`)
-	- `assisted-by`: Adds `Assisted-by: [Model Name] via Crush <crush@charm.land>`
+	- `assisted-by`: Adds `Assisted-by: [Model Name] via Kuroryuu <cli@kuroryuu.com>`
 	  (includes the model name)
-	- `co-authored-by`: Adds `Co-Authored-By: Crush <crush@charm.land>`
+	- `co-authored-by`: Adds `Co-Authored-By: Kuroryuu <cli@kuroryuu.com>`
 	- `none`: No attribution trailer
-- `generated_with`: When true (default), adds `💘 Generated with Crush` line to
+- `generated_with`: When true (default), adds `💘 Generated with Kuroryuu` line to
   commit messages and PR descriptions
 
 ### Custom Providers
 
-Crush supports custom provider configurations for both OpenAI-compatible and
+Kuroryuu supports custom provider configurations for both OpenAI-compatible and
 Anthropic-compatible APIs.
 
 > [!NOTE]
@@ -490,7 +490,7 @@ API. Don't forget to set `DEEPSEEK_API_KEY` in your environment.
 
 ```json
 {
-  "$schema": "https://charm.land/crush.json",
+  "$schema": "https://kuroryuu.com/kuroryuu.json",
   "providers": {
     "deepseek": {
       "type": "openai-compat",
@@ -519,7 +519,7 @@ Custom Anthropic-compatible providers follow this format:
 
 ```json
 {
-  "$schema": "https://charm.land/crush.json",
+  "$schema": "https://kuroryuu.com/kuroryuu.json",
   "providers": {
     "custom-anthropic": {
       "type": "anthropic",
@@ -549,11 +549,11 @@ Custom Anthropic-compatible providers follow this format:
 
 ### Amazon Bedrock
 
-Crush currently supports running Anthropic models through Bedrock, with caching disabled.
+Kuroryuu currently supports running Anthropic models through Bedrock, with caching disabled.
 
 - A Bedrock provider will appear once you have AWS configured, i.e. `aws configure`
-- Crush also expects the `AWS_REGION` or `AWS_DEFAULT_REGION` to be set
-- To use a specific AWS profile set `AWS_PROFILE` in your environment, i.e. `AWS_PROFILE=myprofile crush`
+- Kuroryuu also expects the `AWS_REGION` or `AWS_DEFAULT_REGION` to be set
+- To use a specific AWS profile set `AWS_PROFILE` in your environment, i.e. `AWS_PROFILE=myprofile kuroryuu`
 - Alternatively to `aws configure`, you can also just set `AWS_BEARER_TOKEN_BEDROCK`
 
 ### Vertex AI Platform
@@ -568,7 +568,7 @@ To add specific models to the configuration, configure as such:
 
 ```json
 {
-  "$schema": "https://charm.land/crush.json",
+  "$schema": "https://kuroryuu.com/kuroryuu.json",
   "providers": {
     "vertexai": {
       "models": [
@@ -640,28 +640,28 @@ Local models can also be configured via OpenAI-compatible API. Here are two comm
 
 ## Logging
 
-Sometimes you need to look at logs. Luckily, Crush logs all sorts of
-stuff. Logs are stored in `./.crush/logs/crush.log` relative to the project.
+Sometimes you need to look at logs. Luckily, Kuroryuu logs all sorts of
+stuff. Logs are stored in `./.kuroryuu/logs/kuroryuu.log` relative to the project.
 
 The CLI also contains some helper commands to make perusing recent logs easier:
 
 ```bash
 # Print the last 1000 lines
-crush logs
+kuroryuu logs
 
 # Print the last 500 lines
-crush logs --tail 500
+kuroryuu logs --tail 500
 
 # Follow logs in real time
-crush logs --follow
+kuroryuu logs --follow
 ```
 
-Want more logging? Run `crush` with the `--debug` flag, or enable it in the
+Want more logging? Run `kuroryuu` with the `--debug` flag, or enable it in the
 config:
 
 ```json
 {
-  "$schema": "https://charm.land/crush.json",
+  "$schema": "https://kuroryuu.com/kuroryuu.json",
   "options": {
     "debug": true,
     "debug_lsp": true
@@ -671,10 +671,10 @@ config:
 
 ## Provider Auto-Updates
 
-By default, Crush automatically checks for the latest and greatest list of
+By default, Kuroryuu automatically checks for the latest and greatest list of
 providers and models from [Catwalk](https://github.com/charmbracelet/catwalk),
-the open source Crush provider database. This means that when new providers and
-models are available, or when model metadata changes, Crush automatically
+the open source Kuroryuu provider database. This means that when new providers and
+models are available, or when model metadata changes, Kuroryuu automatically
 updates your local configuration.
 
 ### Disabling automatic provider updates
@@ -684,60 +684,60 @@ air-gapped environments, this might not be want you want, and this feature can
 be disabled.
 
 To disable automatic provider updates, set `disable_provider_auto_update` into
-your `crush.json` config:
+your `kuroryuu.json` config:
 
 ```json
 {
-  "$schema": "https://charm.land/crush.json",
+  "$schema": "https://kuroryuu.com/kuroryuu.json",
   "options": {
     "disable_provider_auto_update": true
   }
 }
 ```
 
-Or set the `CRUSH_DISABLE_PROVIDER_AUTO_UPDATE` environment variable:
+Or set the `KURORYUU_DISABLE_PROVIDER_AUTO_UPDATE` environment variable:
 
 ```bash
-export CRUSH_DISABLE_PROVIDER_AUTO_UPDATE=1
+export KURORYUU_DISABLE_PROVIDER_AUTO_UPDATE=1
 ```
 
 ### Manually updating providers
 
-Manually updating providers is possible with the `crush update-providers`
+Manually updating providers is possible with the `kuroryuu update-providers`
 command:
 
 ```bash
 # Update providers remotely from Catwalk.
-crush update-providers
+kuroryuu update-providers
 
 # Update providers from a custom Catwalk base URL.
-crush update-providers https://example.com/
+kuroryuu update-providers https://example.com/
 
 # Update providers from a local file.
-crush update-providers /path/to/local-providers.json
+kuroryuu update-providers /path/to/local-providers.json
 
-# Reset providers to the embedded version, embedded at crush at build time.
-crush update-providers embedded
+# Reset providers to the embedded version, embedded at kuroryuu at build time.
+kuroryuu update-providers embedded
 
 # For more info:
-crush update-providers --help
+kuroryuu update-providers --help
 ```
 
 ## Metrics
 
-Crush records pseudonymous usage metrics (tied to a device-specific hash),
+Kuroryuu records pseudonymous usage metrics (tied to a device-specific hash),
 which maintainers rely on to inform development and support priorities. The
 metrics include solely usage metadata; prompts and responses are NEVER
 collected.
 
-Details on exactly what’s collected are in the source code ([here](https://github.com/charmbracelet/crush/tree/main/internal/event)
-and [here](https://github.com/charmbracelet/crush/blob/main/internal/llm/agent/event.go)).
+Details on exactly what’s collected are in the source code ([here](https://github.com/ahostbr/kuroryuu/tree/main/internal/event)
+and [here](https://github.com/ahostbr/kuroryuu/blob/main/internal/llm/agent/event.go)).
 
 You can opt out of metrics collection at any time by setting the environment
 variable by setting the following in your environment:
 
 ```bash
-export CRUSH_DISABLE_METRICS=1
+export KURORYUU_DISABLE_METRICS=1
 ```
 
 Or by setting the following in your config:
@@ -750,34 +750,34 @@ Or by setting the following in your config:
 }
 ```
 
-Crush also respects the `DO_NOT_TRACK` convention which can be enabled via
+Kuroryuu also respects the `DO_NOT_TRACK` convention which can be enabled via
 `export DO_NOT_TRACK=1`.
 
 ## Contributing
 
-See the [contributing guide](https://github.com/charmbracelet/crush?tab=contributing-ov-file#contributing).
+See the [contributing guide](https://github.com/ahostbr/kuroryuu?tab=contributing-ov-file#contributing).
 
 ## Whatcha think?
 
 We’d love to hear your thoughts on this project. Need help? We gotchu. You can find us on:
 
-- [Twitter](https://twitter.com/charmcli)
-- [Slack](https://charm.land/slack)
+- [Twitter](https://kuroryuu.com)
+- [Slack](https://kuroryuu.com/slack)
 - [Discord][discord]
-- [The Fediverse](https://mastodon.social/@charmcli)
-- [Bluesky](https://bsky.app/profile/charm.land)
+- [The Fediverse](https://kuroryuu.com)
+- [Bluesky](https://kuroryuu.com)
 
-[discord]: https://charm.land/discord
+[discord]: https://kuroryuu.com/discord
 
 ## License
 
-[FSL-1.1-MIT](https://github.com/charmbracelet/crush/raw/main/LICENSE.md)
+[FSL-1.1-MIT](https://github.com/ahostbr/kuroryuu/raw/main/LICENSE.md)
 
 ---
 
-Part of [Charm](https://charm.land).
+Part of [Charm](https://kuroryuu.com).
 
-<a href="https://charm.land/"><img alt="The Charm logo" width="400" src="https://stuff.charm.sh/charm-banner-next.jpg" /></a>
+<a href="https://kuroryuu.com/"><img alt="The Charm logo" width="400" src="https://stuff.kuroryuu.com/charm-banner-next.jpg" /></a>
 
 <!--prettier-ignore-->
 Charm热爱开源 • Charm loves open source

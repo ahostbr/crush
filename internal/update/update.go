@@ -2,18 +2,18 @@ package update
 
 import (
 	"context"
-	"encoding/json"
+	// "encoding/json" // KURORYUU: unused after disabling update checker
 	"fmt"
-	"io"
-	"net/http"
+	// "io" // KURORYUU: unused after disabling update checker
+	// "net/http" // KURORYUU: unused after disabling update checker
 	"regexp"
 	"strings"
-	"time"
+	// "time" // KURORYUU: unused after disabling update checker
 )
 
 const (
-	githubApiUrl = "https://api.github.com/repos/charmbracelet/crush/releases/latest"
-	userAgent    = "crush/1.0"
+	githubApiUrl = "https://api.github.com/repos/ahostbr/crush/releases/latest"
+	userAgent    = "kuroryuu/1.0"
 )
 
 // Default is the default [Client].
@@ -87,32 +87,37 @@ type github struct{}
 
 // Latest implements [Client].
 func (c *github) Latest(ctx context.Context) (*Release, error) {
-	client := &http.Client{
-		Timeout: 30 * time.Second,
-	}
+	// KURORYUU: Update checker disabled — will implement own update mechanism
+	// The HTTP call to api.github.com has been commented out.
+	// Always return an empty release so no update is ever reported.
+	return &Release{}, nil
 
-	req, err := http.NewRequestWithContext(ctx, "GET", githubApiUrl, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("User-Agent", userAgent)
-	req.Header.Set("Accept", "application/vnd.github.v3+json")
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		body, _ := io.ReadAll(resp.Body)
-		return nil, fmt.Errorf("GitHub API returned status %d: %s", resp.StatusCode, string(body))
-	}
-
-	var release Release
-	if err := json.NewDecoder(resp.Body).Decode(&release); err != nil {
-		return nil, err
-	}
-
-	return &release, nil
+	// client := &http.Client{
+	// 	Timeout: 30 * time.Second,
+	// }
+	//
+	// req, err := http.NewRequestWithContext(ctx, "GET", githubApiUrl, nil)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// req.Header.Set("User-Agent", userAgent)
+	// req.Header.Set("Accept", "application/vnd.github.v3+json")
+	//
+	// resp, err := client.Do(req)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// defer resp.Body.Close()
+	//
+	// if resp.StatusCode != http.StatusOK {
+	// 	body, _ := io.ReadAll(resp.Body)
+	// 	return nil, fmt.Errorf("GitHub API returned status %d: %s", resp.StatusCode, string(body))
+	// }
+	//
+	// var release Release
+	// if err := json.NewDecoder(resp.Body).Decode(&release); err != nil {
+	// 	return nil, err
+	// }
+	//
+	// return &release, nil
 }

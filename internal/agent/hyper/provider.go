@@ -14,7 +14,7 @@ import (
 	"log/slog"
 	"maps"
 	"net/http"
-	"net/url"
+	// "net/url" // KURORYUU: Charm Hyper inference API disabled
 	"os"
 	"strconv"
 	"strings"
@@ -24,10 +24,10 @@ import (
 	"charm.land/catwalk/pkg/catwalk"
 	"charm.land/fantasy"
 	"charm.land/fantasy/object"
-	"github.com/charmbracelet/crush/internal/event"
+	"github.com/ahostbr/crush/internal/event"
 )
 
-//go:generate wget -O provider.json https://hyper.charm.land/api/v1/provider
+//go:generate wget -O provider.json https://hyper.kuroryuu.com/api/v1/provider
 
 //go:embed provider.json
 var embedded []byte
@@ -61,7 +61,7 @@ const (
 	// Name is the default name of this meta provider.
 	Name = "hyper"
 	// defaultBaseURL is the default proxy URL.
-	defaultBaseURL = "https://hyper.charm.land"
+	defaultBaseURL = "https://hyper.kuroryuu.com"
 )
 
 // BaseURL returns the base URL, which is either $HYPER_URL or the default.
@@ -273,40 +273,43 @@ func (m *languageModel) Stream(ctx context.Context, call fantasy.Call) (fantasy.
 }
 
 func (m *languageModel) doRequest(ctx context.Context, stream bool, call fantasy.Call) (*http.Response, error) {
-	addr, err := url.Parse(m.opts.baseURL)
-	if err != nil {
-		return nil, err
-	}
-	addr = addr.JoinPath(m.modelID)
-	if stream {
-		addr = addr.JoinPath("stream")
-	} else {
-		addr = addr.JoinPath("generate")
-	}
+	// KURORYUU: Charm Hyper inference API disabled
+	return nil, fmt.Errorf("KURORYUU: Charm Hyper inference API disabled")
 
-	body, err := json.Marshal(call)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, addr.String(), bytes.NewReader(body))
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Content-Type", "application/json")
-	if stream {
-		req.Header.Set("Accept", "text/event-stream")
-	} else {
-		req.Header.Set("Accept", "application/json")
-	}
-	for k, v := range m.opts.headers {
-		req.Header.Set(k, v)
-	}
-
-	if m.opts.apiKey != "" {
-		req.Header.Set("Authorization", m.opts.apiKey)
-	}
-	return m.opts.client.Do(req)
+	// addr, err := url.Parse(m.opts.baseURL)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// addr = addr.JoinPath(m.modelID)
+	// if stream {
+	// 	addr = addr.JoinPath("stream")
+	// } else {
+	// 	addr = addr.JoinPath("generate")
+	// }
+	//
+	// body, err := json.Marshal(call)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	//
+	// req, err := http.NewRequestWithContext(ctx, http.MethodPost, addr.String(), bytes.NewReader(body))
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// req.Header.Set("Content-Type", "application/json")
+	// if stream {
+	// 	req.Header.Set("Accept", "text/event-stream")
+	// } else {
+	// 	req.Header.Set("Accept", "application/json")
+	// }
+	// for k, v := range m.opts.headers {
+	// 	req.Header.Set(k, v)
+	// }
+	//
+	// if m.opts.apiKey != "" {
+	// 	req.Header.Set("Authorization", m.opts.apiKey)
+	// }
+	// return m.opts.client.Do(req)
 }
 
 // ioReadAllLimit reads up to n bytes.

@@ -18,25 +18,25 @@ import (
 	"charm.land/catwalk/pkg/catwalk"
 	"charm.land/fantasy"
 	"charm.land/lipgloss/v2"
-	"github.com/charmbracelet/crush/internal/agent"
-	"github.com/charmbracelet/crush/internal/agent/tools/mcp"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/db"
-	"github.com/charmbracelet/crush/internal/event"
-	"github.com/charmbracelet/crush/internal/filetracker"
-	"github.com/charmbracelet/crush/internal/format"
-	"github.com/charmbracelet/crush/internal/history"
-	"github.com/charmbracelet/crush/internal/log"
-	"github.com/charmbracelet/crush/internal/lsp"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/permission"
-	"github.com/charmbracelet/crush/internal/pubsub"
-	"github.com/charmbracelet/crush/internal/session"
-	"github.com/charmbracelet/crush/internal/shell"
-	"github.com/charmbracelet/crush/internal/ui/anim"
-	"github.com/charmbracelet/crush/internal/ui/styles"
-	"github.com/charmbracelet/crush/internal/update"
-	"github.com/charmbracelet/crush/internal/version"
+	"github.com/ahostbr/crush/internal/agent"
+	"github.com/ahostbr/crush/internal/agent/tools/mcp"
+	"github.com/ahostbr/crush/internal/config"
+	"github.com/ahostbr/crush/internal/db"
+	"github.com/ahostbr/crush/internal/event"
+	"github.com/ahostbr/crush/internal/filetracker"
+	"github.com/ahostbr/crush/internal/format"
+	"github.com/ahostbr/crush/internal/history"
+	"github.com/ahostbr/crush/internal/log"
+	"github.com/ahostbr/crush/internal/lsp"
+	"github.com/ahostbr/crush/internal/message"
+	"github.com/ahostbr/crush/internal/permission"
+	"github.com/ahostbr/crush/internal/pubsub"
+	"github.com/ahostbr/crush/internal/session"
+	"github.com/ahostbr/crush/internal/shell"
+	"github.com/ahostbr/crush/internal/ui/anim"
+	"github.com/ahostbr/crush/internal/ui/styles"
+	"github.com/ahostbr/crush/internal/update"
+	"github.com/ahostbr/crush/internal/version"
 	"github.com/charmbracelet/x/ansi"
 	"github.com/charmbracelet/x/exp/charmtone"
 	"github.com/charmbracelet/x/term"
@@ -103,8 +103,9 @@ func New(ctx context.Context, conn *sql.DB, cfg *config.Config) (*App, error) {
 
 	app.setupEvents()
 
+	// KURORYUU: Update checker disabled — will implement own update mechanism
 	// Check for updates in the background.
-	go app.checkForUpdates(ctx)
+	// go app.checkForUpdates(ctx)
 
 	go mcp.Initialize(ctx, app.Permissions, cfg)
 

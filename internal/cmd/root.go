@@ -15,14 +15,14 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/colorprofile"
-	"github.com/charmbracelet/crush/internal/app"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/db"
-	"github.com/charmbracelet/crush/internal/event"
-	"github.com/charmbracelet/crush/internal/projects"
-	"github.com/charmbracelet/crush/internal/ui/common"
-	ui "github.com/charmbracelet/crush/internal/ui/model"
-	"github.com/charmbracelet/crush/internal/version"
+	"github.com/ahostbr/crush/internal/app"
+	"github.com/ahostbr/crush/internal/config"
+	"github.com/ahostbr/crush/internal/db"
+	"github.com/ahostbr/crush/internal/event"
+	"github.com/ahostbr/crush/internal/projects"
+	"github.com/ahostbr/crush/internal/ui/common"
+	ui "github.com/ahostbr/crush/internal/ui/model"
+	"github.com/ahostbr/crush/internal/version"
 	"github.com/charmbracelet/fang"
 	uv "github.com/charmbracelet/ultraviolet"
 	"github.com/charmbracelet/x/ansi"
@@ -51,7 +51,7 @@ func init() {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "crush",
+	Use:   "Kuroryuu-cli-v0.5",
 	Short: "An AI assistant for software development",
 	Long:  "An AI assistant for software development and similar tasks with direct access to the terminal",
 	Example: `
@@ -71,7 +71,7 @@ crush -D /path/to/custom/.crush
 crush -v
 
 # Run a single non-interactive prompt
-crush run "Explain the use of context in Go"
+kuroryuu run "Explain the use of context in Go"
 
 # Run in dangerous mode (auto-accept all permissions)
 crush -y
@@ -102,7 +102,7 @@ crush -y
 		if _, err := program.Run(); err != nil {
 			event.Error(err)
 			slog.Error("TUI run error", "error", err)
-			return errors.New("Crush crashed. If metrics are enabled, we were notified about it. If you'd like to report it, please copy the stacktrace above and open an issue at https://github.com/charmbracelet/crush/issues/new?template=bug.yml") //nolint:staticcheck
+			return errors.New("Kuroryuu crashed. If metrics are enabled, we were notified about it. If you'd like to report it, please copy the stacktrace above and open an issue at https://github.com/ahostbr/crush/issues/new?template=bug.yml") //nolint:staticcheck
 		}
 		return nil
 	},
@@ -202,7 +202,7 @@ func setupApp(cmd *cobra.Command) (*app.App, error) {
 	}
 	cfg.Permissions.SkipRequests = yolo
 
-	if err := createDotCrushDir(cfg.Options.DataDirectory); err != nil {
+	if err := createDotKuroryuuDir(cfg.Options.DataDirectory); err != nil {
 		return nil, err
 	}
 
@@ -232,7 +232,7 @@ func setupApp(cmd *cobra.Command) (*app.App, error) {
 }
 
 func shouldEnableMetrics(cfg *config.Config) bool {
-	if v, _ := strconv.ParseBool(os.Getenv("CRUSH_DISABLE_METRICS")); v {
+	if v, _ := strconv.ParseBool(os.Getenv("KURORYUU_DISABLE_METRICS")); v {
 		return false
 	}
 	if v, _ := strconv.ParseBool(os.Getenv("DO_NOT_TRACK")); v {
@@ -279,7 +279,7 @@ func ResolveCwd(cmd *cobra.Command) (string, error) {
 	return cwd, nil
 }
 
-func createDotCrushDir(dir string) error {
+func createDotKuroryuuDir(dir string) error {
 	if err := os.MkdirAll(dir, 0o700); err != nil {
 		return fmt.Errorf("failed to create data directory: %q %w", dir, err)
 	}

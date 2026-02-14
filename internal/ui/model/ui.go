@@ -24,29 +24,29 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"charm.land/catwalk/pkg/catwalk"
 	"charm.land/lipgloss/v2"
-	agenttools "github.com/charmbracelet/crush/internal/agent/tools"
-	"github.com/charmbracelet/crush/internal/agent/tools/mcp"
-	"github.com/charmbracelet/crush/internal/app"
-	"github.com/charmbracelet/crush/internal/commands"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/fsext"
-	"github.com/charmbracelet/crush/internal/history"
-	"github.com/charmbracelet/crush/internal/home"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/permission"
-	"github.com/charmbracelet/crush/internal/pubsub"
-	"github.com/charmbracelet/crush/internal/session"
-	"github.com/charmbracelet/crush/internal/ui/anim"
-	"github.com/charmbracelet/crush/internal/ui/attachments"
-	"github.com/charmbracelet/crush/internal/ui/chat"
-	"github.com/charmbracelet/crush/internal/ui/common"
-	"github.com/charmbracelet/crush/internal/ui/completions"
-	"github.com/charmbracelet/crush/internal/ui/dialog"
-	fimage "github.com/charmbracelet/crush/internal/ui/image"
-	"github.com/charmbracelet/crush/internal/ui/logo"
-	"github.com/charmbracelet/crush/internal/ui/styles"
-	"github.com/charmbracelet/crush/internal/ui/util"
-	"github.com/charmbracelet/crush/internal/version"
+	agenttools "github.com/ahostbr/crush/internal/agent/tools"
+	"github.com/ahostbr/crush/internal/agent/tools/mcp"
+	"github.com/ahostbr/crush/internal/app"
+	"github.com/ahostbr/crush/internal/commands"
+	"github.com/ahostbr/crush/internal/config"
+	"github.com/ahostbr/crush/internal/fsext"
+	"github.com/ahostbr/crush/internal/history"
+	"github.com/ahostbr/crush/internal/home"
+	"github.com/ahostbr/crush/internal/message"
+	"github.com/ahostbr/crush/internal/permission"
+	"github.com/ahostbr/crush/internal/pubsub"
+	"github.com/ahostbr/crush/internal/session"
+	"github.com/ahostbr/crush/internal/ui/anim"
+	"github.com/ahostbr/crush/internal/ui/attachments"
+	"github.com/ahostbr/crush/internal/ui/chat"
+	"github.com/ahostbr/crush/internal/ui/common"
+	"github.com/ahostbr/crush/internal/ui/completions"
+	"github.com/ahostbr/crush/internal/ui/dialog"
+	fimage "github.com/ahostbr/crush/internal/ui/image"
+	"github.com/ahostbr/crush/internal/ui/logo"
+	"github.com/ahostbr/crush/internal/ui/styles"
+	"github.com/ahostbr/crush/internal/ui/util"
+	"github.com/ahostbr/crush/internal/version"
 	uv "github.com/charmbracelet/ultraviolet"
 	"github.com/charmbracelet/ultraviolet/layout"
 	"github.com/charmbracelet/ultraviolet/screen"
@@ -1906,7 +1906,7 @@ func (m *UI) Draw(scr uv.Screen, area uv.Rectangle) *tea.Cursor {
 	}
 
 	// Debugging rendering (visually see when the tui rerenders)
-	if os.Getenv("CRUSH_UI_DEBUG") == "true" {
+	if os.Getenv("KURORYUU_UI_DEBUG") == "true" {
 		debugView := lipgloss.NewStyle().Background(lipgloss.ANSIColor(rand.Intn(256))).Width(4).Height(2)
 		debug := uv.NewStyledString(debugView.String())
 		debug.Draw(scr, image.Rectangle{
@@ -2424,7 +2424,7 @@ func (m *UI) openEditor(value string) tea.Cmd {
 		return util.ReportError(err)
 	}
 	cmd, err := editor.Command(
-		"crush",
+		"kuroryuu",
 		tmpfile.Name(),
 		editor.AtPosition(
 			m.textarea.Line()+1,
@@ -3312,7 +3312,7 @@ func (m *UI) copyChatHighlight() tea.Cmd {
 	)
 }
 
-// renderLogo renders the Crush logo with the given styles and dimensions.
+// renderLogo renders the Kuroryuu logo with the given styles and dimensions.
 func renderLogo(t *styles.Styles, compact bool, width int) string {
 	return logo.Render(t, version.Version, compact, logo.Opts{
 		FieldColor:   t.LogoFieldColor,

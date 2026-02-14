@@ -2,9 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## What is Crush?
+## What is Kuroryuu CLI?
 
-Crush is a terminal-based AI coding assistant built by Charm. It supports multiple LLM providers (Anthropic, OpenAI, Google, Bedrock, etc.) via OpenAI- and Anthropic-compatible APIs, with features like session management, LSP integration, MCP server support, and tool execution. Written in Go, built on the Charm ecosystem (Bubble Tea, Lip Gloss, Glamour).
+Kuroryuu CLI (黒き幻影の霧の龍) is a terminal-based AI coding assistant — part of the broader Kuroryuu multi-agent AI platform at `E:\SAS\CLONE\Kuroryuu-master\`. This repository is the Go-based CLI component (v0.5), forked from an upstream project and rebranded under the Kuroryuu ecosystem at kuroryuu.com.
+
+The platform includes: gateway API, MCP tool server, desktop app, web UI, and multiple CLI versions (Python v1/v2, Go v3/v0.5). This repo is the Go CLI.
 
 ## Build/Test/Lint Commands
 
@@ -19,7 +21,7 @@ Crush is a terminal-based AI coding assistant built by Charm. It supports multip
 - **Format**: `task fmt` (runs `gofumpt -w .`)
 - **Modernize**: `task modernize`
 - **Record VCR cassettes**: `task test:record` (re-records all agent test cassettes)
-- **Dev with profiling**: `task dev` (sets `CRUSH_PROFILE=true`, pprof on :6060)
+- **Dev with profiling**: `task dev` (sets `KURORYUU_PROFILE=true`, pprof on :6060)
 - **Generate DB code**: `sqlc generate` (from `sqlc.yaml`)
 - **Generate schema**: `task schema`
 
@@ -40,8 +42,8 @@ Environment: `CGO_ENABLED=0`, `GOEXPERIMENT=greenteagc`.
 - **`Coordinator`** interface manages running agents across sessions with queueing, cancellation, and summarization.
 - **`SessionAgent`** interface runs a single agent call with a model/tools against a session.
 - **Prompts** are Go templates embedded via `//go:embed` from `templates/` (e.g., `coder.md.tpl`, `task.md.tpl`, `initialize.md.tpl`).
-- **`fantasy`** (`charm.land/fantasy`) is the LLM abstraction layer supporting all provider types (Anthropic, OpenAI, Bedrock, Google, Azure, Vercel, OpenRouter, etc.).
-- **`catwalk`** (`charm.land/catwalk`) is the community-managed provider/model registry.
+- **`fantasy`** (`charm.land/fantasy`) is the upstream LLM abstraction layer supporting all provider types (Anthropic, OpenAI, Bedrock, Google, Azure, Vercel, OpenRouter, etc.).
+- **`catwalk`** (`charm.land/catwalk`) is the upstream provider/model registry.
 
 ### Tools (`internal/agent/tools/`)
 
@@ -63,7 +65,7 @@ SQLite via sqlc. Migrations in `internal/db/migrations/`. SQL queries in `intern
 
 ### Config (`internal/config/`)
 
-JSON config loaded from `.crush.json` / `crush.json` / `~/.config/crush/crush.json` (priority order). Config includes providers, LSP settings, MCP servers, permissions, and options. Reads context from `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, etc. automatically.
+JSON config loaded from `.kuroryuu.json` / `kuroryuu.json` / `~/.config/kuroryuu/kuroryuu.json` (priority order). Config includes providers, LSP settings, MCP servers, permissions, and options. Reads context from `AGENTS.md`, `CLAUDE.md`, `KURORYUU.md`, `.cursorrules`, etc. automatically.
 
 ### Key Supporting Packages
 
@@ -75,6 +77,16 @@ JSON config loaded from `.crush.json` / `crush.json` / `~/.config/crush/crush.js
 - `internal/event/` — Metrics/telemetry event types and logging.
 - `internal/pubsub/` — Generic typed pub/sub broker.
 - `internal/csync/` — Concurrent data structures (maps, slices, values).
+
+## Kuroryuu Ecosystem Context
+
+This CLI is one component of the Kuroryuu platform (`E:\SAS\CLONE\Kuroryuu-master\`):
+- **Gateway** (`apps/gateway/`) — Python/FastAPI central API, port 8200
+- **MCP Core** (`apps/mcp_core/`) — MCP tool server with 17 tools / 126 actions, port 8100
+- **Desktop** (`apps/desktop/`) — Electron/React desktop app, 235 components
+- **Web** (`apps/web/`) — Next.js web UI, port 3000
+- **CLI v1/v2** (`apps/kuroryuu_cli/`, `apps/kuroryuu_cli_v2/`) — Python CLI predecessors
+- **CLI v3** (`apps/kuroryuu_cli_v3/`) — Go CLI prototype (pre-fork)
 
 ## Code Style
 
