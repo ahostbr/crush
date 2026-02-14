@@ -11,6 +11,12 @@
 
 <p align="center"><img width="800" alt="Kuroryuu Demo" src="https://github.com/user-attachments/assets/58280caf-851b-470a-b6f7-d5c4ea8a1968" /></p>
 
+## Origins
+
+Kuroryuu is a rebranded, actively maintained fork of [ahostbr/crush](https://github.com/ahostbr/crush). The fork keeps the same CLI engine and agent tooling while aligning names, assets, and documentation with the broader Kuroryuu ecosystem so that the terminal experience matches the rest of our brand.
+
+The repository keeps the `rebrand.sh` helper to refresh logos, colors, links, and metadata whenever we sync with new upstream crush releases, ensuring the project stays current with both upstream improvements and Kuroryuu-specific styling.
+
 ## Features
 
 - **Multi-Model:** choose from a wide range of LLMs or add your own via OpenAI- or Anthropic-compatible APIs

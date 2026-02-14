@@ -261,6 +261,7 @@ type Options struct {
 	InitializeAs              string       `json:"initialize_as,omitempty" jsonschema:"description=Name of the context file to create/update during project initialization,default=AGENTS.md,example=AGENTS.md,example=KURORYUU.md,example=CLAUDE.md,example=docs/LLMs.md"`
 	AutoLSP                   *bool        `json:"auto_lsp,omitempty" jsonschema:"description=Automatically setup LSPs based on root markers,default=true"`
 	Progress                  *bool        `json:"progress,omitempty" jsonschema:"description=Show indeterminate progress updates during long operations,default=true"`
+	FreeModelsOnly            *bool        `json:"free_models_only,omitempty" jsonschema:"description=Only show free models from external providers. Local and custom providers are always shown.,default=true"`
 }
 
 type MCPs map[string]MCPConfig

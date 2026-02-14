@@ -5,8 +5,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log/slog"
 	"maps"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -15,6 +17,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"charm.land/catwalk/pkg/catwalk"
 	"github.com/ahostbr/crush/internal/agent/hyper"
@@ -80,6 +83,22 @@ func Load(workingDir, dataDir string, debug bool) (*Config, error) {
 	cfg.resolver = valueResolver
 	if err := cfg.configureProviders(env, valueResolver, cfg.knownProviders); err != nil {
 		return nil, fmt.Errorf("failed to configure providers: %w", err)
+	}
+
+	// Filter knownProviders for UI display when free_models_only is enabled
+	if cfg.Options.FreeModelsOnly != nil && *cfg.Options.FreeModelsOnly {
+		for i := range cfg.knownProviders {
+			filtered := make([]catwalk.Model, 0)
+			for _, m := range cfg.knownProviders[i].Models {
+				if isFreeModel(m) {
+					filtered = append(filtered, m)
+				}
+			}
+			cfg.knownProviders[i].Models = filtered
+		}
+		cfg.knownProviders = slices.DeleteFunc(cfg.knownProviders, func(p catwalk.Provider) bool {
+			return len(p.Models) == 0
+		})
 	}
 
 	if !cfg.IsConfigured() {
@@ -267,6 +286,19 @@ func (c *Config) configureProviders(env env.Env, resolver VariableResolver, know
 				continue
 			}
 		}
+		// Filter to free models only when enabled
+		if c.Options.FreeModelsOnly != nil && *c.Options.FreeModelsOnly {
+			filtered := make([]catwalk.Model, 0, len(prepared.Models))
+			for _, m := range prepared.Models {
+				if isFreeModel(m) {
+					filtered = append(filtered, m)
+				}
+			}
+			prepared.Models = filtered
+			if len(prepared.Models) == 0 {
+				continue
+			}
+		}
 		c.Providers.Set(string(p.ID), prepared)
 	}
 
@@ -285,7 +317,10 @@ func (c *Config) configureProviders(env env.Env, resolver VariableResolver, know
 		if providerConfig.Type == "" {
 			providerConfig.Type = catwalk.TypeOpenAICompat
 		}
-		if !slices.Contains(catwalk.KnownProviderTypes(), providerConfig.Type) && providerConfig.Type != hyper.Name {
+		if !slices.Contains(catwalk.KnownProviderTypes(), providerConfig.Type) &&
+			providerConfig.Type != hyper.Name &&
+			providerConfig.Type != "lm-studio" &&
+			providerConfig.Type != "cliproxy" {
 			slog.Warn("Skipping custom provider due to unsupported provider type", "provider", id)
 			c.Providers.Del(id)
 			continue
@@ -332,6 +367,18 @@ func (c *Config) configureProviders(env env.Env, resolver VariableResolver, know
 		c.Providers.Set(id, providerConfig)
 	}
 
+	// Auto-detect local/proxy providers
+	for _, detectFn := range []func() *ProviderConfig{
+		func() *ProviderConfig { return detectLMStudio(env) },
+		func() *ProviderConfig { return detectCLIProxy(env) },
+	} {
+		if p := detectFn(); p != nil {
+			if _, exists := c.Providers.Get(p.ID); !exists {
+				c.Providers.Set(p.ID, *p)
+			}
+		}
+	}
+
 	if c.Providers.Len() == 0 && c.Options.DisableDefaultProviders {
 		return fmt.Errorf("default providers are disabled and there are no custom providers are configured")
 	}
@@ -371,6 +418,7 @@ func (c *Config) setDefaults(workingDir, dataDir string) {
 	if c.LSP == nil {
 		c.LSP = make(map[string]LSPConfig)
 	}
+	assignIfNil(&c.Options.FreeModelsOnly, true)
 
 	// Apply defaults to LSP configurations
 	c.applyLSPDefaults()
@@ -798,3 +846,107 @@ func GlobalSkillsDirs() []string {
 }
 
 func isAppleTerminal() bool { return os.Getenv("TERM_PROGRAM") == "Apple_Terminal" }
+
+// isFreeModel returns true if the model is free (zero cost or tagged as free).
+func isFreeModel(m catwalk.Model) bool {
+	if strings.Contains(strings.ToLower(m.Name), "(free)") {
+		return true
+	}
+	return m.CostPer1MIn == 0 && m.CostPer1MOut == 0
+}
+
+// discoverOpenAIModels probes an OpenAI-compatible /models endpoint and returns
+// discovered models. Returns nil if the endpoint is unreachable or has no models.
+func discoverOpenAIModels(baseURL, apiKey string, timeout time.Duration) []catwalk.Model {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	modelsURL := strings.TrimRight(baseURL, "/") + "/models"
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, modelsURL, nil)
+	if err != nil {
+		return nil
+	}
+	if apiKey != "" {
+		req.Header.Set("Authorization", "Bearer "+apiKey)
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil
+	}
+
+	body, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
+	if err != nil {
+		return nil
+	}
+
+	var result struct {
+		Data []struct {
+			ID string `json:"id"`
+		} `json:"data"`
+	}
+	if err := json.Unmarshal(body, &result); err != nil {
+		return nil
+	}
+
+	models := make([]catwalk.Model, 0, len(result.Data))
+	for _, m := range result.Data {
+		models = append(models, catwalk.Model{
+			ID:               m.ID,
+			Name:             m.ID,
+			ContextWindow:    32000,
+			DefaultMaxTokens: 4096,
+		})
+	}
+	return models
+}
+
+// detectLMStudio checks if LM Studio is running and returns a provider config
+// with auto-discovered models. Returns nil if LM Studio is not reachable.
+func detectLMStudio(e env.Env) *ProviderConfig {
+	baseURL := cmp.Or(e.Get("LM_STUDIO_URL"), "http://localhost:1234/v1")
+
+	models := discoverOpenAIModels(baseURL, "", 2*time.Second)
+	if len(models) == 0 {
+		return nil
+	}
+
+	slog.Info("Auto-detected LM Studio", "url", baseURL, "models", len(models))
+	return &ProviderConfig{
+		ID:      "lm-studio",
+		Name:    "LM Studio",
+		BaseURL: baseURL,
+		Type:    catwalk.TypeOpenAICompat,
+		Models:  models,
+	}
+}
+
+// detectCLIProxy checks if CLIProxyAPI is configured and returns a provider
+// config with auto-discovered models. Returns nil if not configured or unreachable.
+func detectCLIProxy(e env.Env) *ProviderConfig {
+	baseURL := e.Get("CLIPROXY_URL")
+	if baseURL == "" {
+		return nil
+	}
+	apiKey := e.Get("CLIPROXY_KEY")
+
+	models := discoverOpenAIModels(baseURL, apiKey, 2*time.Second)
+	if len(models) == 0 {
+		return nil
+	}
+
+	slog.Info("Auto-detected CLIProxyAPI", "url", baseURL, "models", len(models))
+	return &ProviderConfig{
+		ID:      "cliproxy",
+		Name:    "CLIProxyAPI",
+		BaseURL: baseURL,
+		Type:    catwalk.TypeOpenAICompat,
+		APIKey:  apiKey,
+		Models:  models,
+	}
+}
