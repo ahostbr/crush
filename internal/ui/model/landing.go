@@ -1,9 +1,12 @@
 package model
 
 import (
+	"strings"
+
 	"charm.land/lipgloss/v2"
 	"github.com/ahostbr/crush/internal/agent"
 	"github.com/ahostbr/crush/internal/ui/common"
+	"github.com/ahostbr/crush/internal/ui/logo"
 	"github.com/charmbracelet/ultraviolet/layout"
 )
 
@@ -38,13 +41,38 @@ func (m *UI) landingView() string {
 	lspSection := m.lspInfo(mcpLspSectionWidth, max(1, remainingHeightArea.Dy()), false)
 	mcpSection := m.mcpInfo(mcpLspSectionWidth, max(1, remainingHeightArea.Dy()), false)
 
-	content := lipgloss.JoinHorizontal(lipgloss.Left, lspSection, " ", mcpSection)
+	statusContent := lipgloss.JoinHorizontal(lipgloss.Left, lspSection, " ", mcpSection)
+
+	// Render dragon art if there's enough space
+	mainHeight := m.layout.main.Dy() - 1
+	usedHeight := lipgloss.Height(infoSection) + 1 + lipgloss.Height(statusContent) + 1
+	dragon := logo.DragonArt()
+	dragonLines := strings.Split(dragon, "\n")
+	dragonHeight := len(dragonLines)
+	availableHeight := mainHeight - usedHeight
+
+	var dragonRendered string
+	if availableHeight >= 10 && width >= 60 {
+		// Trim dragon if it's taller than available space
+		if dragonHeight > availableHeight {
+			dragonLines = dragonLines[:availableHeight]
+			dragon = strings.Join(dragonLines, "\n")
+		}
+		dragonStyle := lipgloss.NewStyle().Foreground(t.Primary)
+		dragonRendered = dragonStyle.Render(dragon)
+	}
+
+	var sections []string
+	sections = append(sections, infoSection, "", statusContent)
+	if dragonRendered != "" {
+		sections = append(sections, "", dragonRendered)
+	}
 
 	return lipgloss.NewStyle().
 		Width(width).
-		Height(m.layout.main.Dy() - 1).
+		Height(mainHeight).
 		PaddingTop(1).
 		Render(
-			lipgloss.JoinVertical(lipgloss.Left, infoSection, "", content),
+			lipgloss.JoinVertical(lipgloss.Left, sections...),
 		)
 }
