@@ -91,7 +91,7 @@ func GlobWithDoubleStar(pattern, searchPath string, limit int) ([]string, bool, 
 	found := csync.NewSlice[FileInfo]()
 	conf := fastwalk.Config{
 		Follow:  true,
-		ToSlash: fastwalk.DefaultToSlash(),
+		ToSlash: false, // kuroryuu_change
 		Sort:    fastwalk.SortFilesFirst,
 	}
 	err := fastwalk.Walk(&conf, searchPath, func(path string, d os.DirEntry, err error) error {
