@@ -14,15 +14,16 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"github.com/charmbracelet/colorprofile"
 	"github.com/ahostbr/crush/internal/app"
 	"github.com/ahostbr/crush/internal/config"
 	"github.com/ahostbr/crush/internal/db"
 	"github.com/ahostbr/crush/internal/event"
+	"github.com/ahostbr/crush/internal/kuroryuu/liteharness" // kuroryuu_change
 	"github.com/ahostbr/crush/internal/projects"
 	"github.com/ahostbr/crush/internal/ui/common"
 	ui "github.com/ahostbr/crush/internal/ui/model"
 	"github.com/ahostbr/crush/internal/version"
+	"github.com/charmbracelet/colorprofile"
 	"github.com/charmbracelet/fang"
 	uv "github.com/charmbracelet/ultraviolet"
 	"github.com/charmbracelet/x/ansi"
@@ -97,6 +98,7 @@ crush -y
 			tea.WithFilter(ui.MouseEventFilter), // Filter mouse events based on focus state
 		)
 		go app.Subscribe(program)
+		startLiteHarnessWatcher(cmd.Context(), app) // kuroryuu_change
 
 		if _, err := program.Run(); err != nil {
 			event.Error(err)
@@ -106,6 +108,34 @@ crush -y
 		return nil
 	},
 }
+
+// kuroryuu_change start
+func startLiteHarnessWatcher(ctx context.Context, application *app.App) {
+	watcher, enabled, err := liteharness.FromEnv()
+	if err != nil {
+		slog.Error("LiteHarness watcher configuration error", "error", err)
+		return
+	}
+	if !enabled {
+		return
+	}
+
+	slog.Info("Starting LiteHarness inbox watcher", "agent_id", watcher.AgentID, "root", watcher.Root)
+	go func() {
+		err := watcher.Run(ctx, func(ctx context.Context, msg liteharness.Message) error {
+			return application.Send(ctx, ui.LiteHarnessMessageMsg{
+				From: msg.From,
+				Type: msg.Type,
+				Body: msg.Body,
+			})
+		})
+		if err != nil && !errors.Is(err, context.Canceled) {
+			slog.Error("LiteHarness inbox watcher stopped", "error", err)
+		}
+	}()
+}
+
+// kuroryuu_change end
 
 var heartbit = lipgloss.NewStyle().Foreground(lipgloss.Color("#CC3333")).SetString(`
     ▄▄▄▄▄▄▄▄    ▄▄▄▄▄▄▄▄

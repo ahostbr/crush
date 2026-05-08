@@ -115,6 +115,15 @@ type (
 		Attachments []message.Attachment
 	}
 
+	// kuroryuu_change start
+	// LiteHarnessMessageMsg is sent when the LiteHarness inbox receives a prompt.
+	LiteHarnessMessageMsg struct {
+		From string
+		Type string
+		Body string
+	}
+	// kuroryuu_change end
+
 	// closeDialogMsg is sent to close the current dialog.
 	closeDialogMsg struct{}
 
@@ -435,6 +444,11 @@ func (m *UI) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case sendMessageMsg:
 		cmds = append(cmds, m.sendMessage(msg.Content, msg.Attachments...))
+
+	// kuroryuu_change start
+	case LiteHarnessMessageMsg:
+		cmds = append(cmds, m.sendMessage(msg.Body))
+	// kuroryuu_change end
 
 	case userCommandsLoadedMsg:
 		m.customCommands = msg.Commands

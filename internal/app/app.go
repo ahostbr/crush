@@ -142,6 +142,26 @@ func (app *App) Config() *config.Config {
 	return app.config
 }
 
+// kuroryuu_change start
+// Send queues a message for the interactive TUI event loop.
+func (app *App) Send(ctx context.Context, msg tea.Msg) error {
+	timer := time.NewTimer(subscriberSendTimeout)
+	defer timer.Stop()
+
+	select {
+	case app.events <- msg:
+		return nil
+	case <-timer.C:
+		return fmt.Errorf("timed out sending TUI message")
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-app.eventsCtx.Done():
+		return app.eventsCtx.Err()
+	}
+}
+
+// kuroryuu_change end
+
 // RunNonInteractive runs the application in non-interactive mode with the
 // given prompt, printing to stdout.
 func (app *App) RunNonInteractive(ctx context.Context, output io.Writer, prompt, largeModel, smallModel string, hideSpinner bool) error {
